@@ -1,39 +1,39 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { OperationRepositoryPort } from './operation.repository.port';
+import { ScheduleRepositoryPort } from './schedule.repository.port';
 import { PaginatedQueryParams, Paginated } from 'libs/ports/repository.port';
-import { OperationEntity } from '../../../domain/entities/operation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OperationRepositoryEntity } from './operation.entity';
+import { ScheduleRepositoryEntity } from './schedule.entity';
 import { Repository } from 'typeorm';
-import { OperationMapper } from 'apps/gateway/src/infrastructure/mappers/operation.mapper';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ScheduleEntity } from '../../../domain/entities/schedule.entity';
+import { ScheduleMapper } from 'apps/scheduler/src/infrastructure/mappers/schedule.mapper';
 
 @Injectable()
-export class OperationRepository implements OperationRepositoryPort {
+export class ScheduleRepository implements ScheduleRepositoryPort {
   constructor(
-    @InjectRepository(OperationRepositoryEntity)
-    protected readonly repo: Repository<OperationRepositoryEntity>,
-    protected readonly mapper: OperationMapper,
+    @InjectRepository(ScheduleRepositoryEntity)
+    protected readonly repo: Repository<ScheduleRepositoryEntity>,
+    protected readonly mapper: ScheduleMapper,
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
-  async insert(entity: OperationEntity): Promise<void> {
+  async insert(entity: ScheduleEntity): Promise<void> {
     const result = await this.repo.insert(this.mapper.toPersistence(entity));
     await entity.publishEvents(this.logger, this.eventEmitter);
     return;
   }
-  async findOneById(id: string): Promise<OperationEntity> {
+  async findOneById(id: string): Promise<ScheduleEntity> {
     const result = await this.repo.findOneBy({ id });
     const entity = this.mapper.toDomain(result);
     return entity;
   }
-  async findAll(): Promise<OperationEntity[]> {
+  async findAll(): Promise<ScheduleEntity[]> {
     const result = await this.repo.find();
     return result.map((record) => this.mapper.toDomain(record));
   }
   async findAllPaginated(
     params: PaginatedQueryParams,
-  ): Promise<Paginated<OperationEntity>> {
+  ): Promise<Paginated<ScheduleEntity>> {
     const result = await this.repo.find({
       skip: params.offset,
       take: params.limit,
@@ -46,7 +46,7 @@ export class OperationRepository implements OperationRepositoryPort {
       data: result.map((record) => this.mapper.toDomain(record)),
     });
   }
-  async delete(entity: OperationEntity): Promise<boolean> {
+  async delete(entity: ScheduleEntity): Promise<boolean> {
     const result = await this.repo.softDelete(entity.id);
     if (result) {
       await entity.publishEvents(this.logger, this.eventEmitter);

@@ -65,6 +65,12 @@
       ],
       "@app/dto/*": [
         "libs/dto/src/*"
+      ],
+      "@app/events": [
+        "libs/events/src"
+      ],
+      "@app/events/*": [
+        "libs/events/src/*"
       ]
     }
   }

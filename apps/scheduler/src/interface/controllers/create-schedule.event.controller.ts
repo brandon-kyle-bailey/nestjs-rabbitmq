@@ -5,6 +5,7 @@ import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
 import axios, { AxiosError } from 'axios';
+import { OperationIntegrationEvents } from 'libs/events/operation.events';
 import { catchError, firstValueFrom } from 'rxjs';
 
 // TODO... seperate invoke handler into event processor service
@@ -34,10 +35,9 @@ export class CreateScheduleEventController {
     protected readonly logger: Logger,
     protected readonly schedulerRegistry: SchedulerRegistry,
     protected readonly eventEmitter: EventEmitter2,
-    private readonly httpService: HttpService,
   ) {}
 
-  @EventPattern('schedule')
+  @EventPattern(OperationIntegrationEvents.Schedule)
   async create(
     @Payload() payload: any,
     @Ctx() context: RmqContext,
@@ -50,13 +50,9 @@ export class CreateScheduleEventController {
         `${data.aggregateId}_scheduled_event`,
       )
     ) {
-      this.logger.debug('interval already exists, returning');
+      this.logger.debug('interval already exists');
       return;
     }
-    this.logger.debug('adding interval for event', {
-      id: data.aggregateId,
-      interval: data.interval,
-    });
     this.schedulerRegistry.addInterval(
       `${data.aggregateId}_scheduled_event`,
       setInterval(async () => {
@@ -73,22 +69,21 @@ export class CreateScheduleEventController {
     );
     const data = JSON.parse(payload);
     const url = `${data.protocol}://${data.host}:${data.port}`;
-    this.logger.debug('url to ping', url);
-    const { status, headers } = await firstValueFrom(
-      this.httpService.get(url).pipe(
-        catchError((error: AxiosError) => {
-          this.logger.error(error);
-          throw error.response.status;
-        }),
-      ),
-    );
-    this.logger.debug(
-      `CreateScheduleEventController.processEvent result status from ping`,
-      status,
-    );
-    this.logger.debug(
-      `CreateScheduleEventController.processEvent result duration from ping`,
-      headers.duration,
-    );
+    // const { status, headers } = await firstValueFrom(
+    //   this.httpService.get(url).pipe(
+    //     catchError((error: AxiosError) => {
+    //       this.logger.error(error);
+    //       throw error.response.status;
+    //     }),
+    //   ),
+    // );
+    // this.logger.debug(
+    //   `CreateScheduleEventController.processEvent result status from ping`,
+    //   status,
+    // );
+    // this.logger.debug(
+    //   `CreateScheduleEventController.processEvent result duration from ping`,
+    //   headers.duration,
+    // );
   }
 }

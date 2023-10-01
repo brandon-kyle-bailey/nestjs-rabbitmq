@@ -13,28 +13,46 @@ import { OperationRepository } from './core/application/ports/operation/operatio
 import { OperationMapper } from './infrastructure/mappers/operation.mapper';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleOperationService } from './core/application/services/schedule-operation.service';
+import { DeleteOperationController } from './interface/controllers/delete-operation.http.controller';
+import { DeleteOperationService } from './core/application/services/delete-operation.service';
+import { UnscheduleOperationService } from './core/application/services/unschedule-operation.service';
+
+const entities = [OperationRepositoryEntity];
+
+const repositories = [OperationRepository];
+
+const mappers = [OperationMapper];
+
+const services = [
+  CreateOperationService,
+  DeleteOperationService,
+  ScheduleOperationService,
+  UnscheduleOperationService,
+];
+
+const controllers = [CreateOperationController, DeleteOperationController];
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
     }),
     CqrsModule,
     DatabaseModule,
     SchedulerModule,
     RequestContextModule,
-    TypeOrmModule.forFeature([OperationRepositoryEntity]),
+    TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),
   ],
-  controllers: [CreateOperationController],
+  controllers,
   providers: [
-    DatabaseModule,
-    ConfigService,
     Logger,
-    CreateOperationService,
-    OperationRepository,
-    OperationMapper,
-    ScheduleOperationService,
+    ConfigService,
+    DatabaseModule,
+    ...repositories,
+    ...mappers,
+    ...services,
   ],
 })
 export class GatewayModule {}

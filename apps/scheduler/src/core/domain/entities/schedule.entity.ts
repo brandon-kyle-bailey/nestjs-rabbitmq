@@ -3,13 +3,13 @@ import { AggregateRoot } from 'libs/ddd/aggregate-root.base';
 import { AggregateID } from 'libs/ddd/entity.base';
 import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
 
-export class OperationCreatedDomainEvent extends DomainEvent {
+export class ScheduleCreatedDomainEvent extends DomainEvent {
   readonly name: string;
   readonly protocol: string;
   readonly host: string;
   readonly port: number;
   readonly interval: number;
-  constructor(props: DomainEventProps<OperationCreatedDomainEvent>) {
+  constructor(props: DomainEventProps<ScheduleCreatedDomainEvent>) {
     super(props);
     this.name = props.name;
     this.protocol = props.protocol;
@@ -19,14 +19,14 @@ export class OperationCreatedDomainEvent extends DomainEvent {
   }
 }
 
-export class OperationDeletedDomainEvent extends DomainEvent {
-  constructor(props: DomainEventProps<OperationDeletedDomainEvent>) {
+export class ScheduleDeletedDomainEvent extends DomainEvent {
+  constructor(props: DomainEventProps<ScheduleDeletedDomainEvent>) {
     super(props);
   }
 }
 
-// All properties that an Operation has
-export interface OperationProps {
+// All properties that an Schedule has
+export interface ScheduleProps {
   name: string;
   protocol: string;
   host: string;
@@ -34,8 +34,8 @@ export interface OperationProps {
   interval: number;
 }
 
-// Properties that are needed for a operation creation
-export interface CreateOperationProps {
+// Properties that are needed for a Schedule creation
+export interface CreateScheduleProps {
   name: string;
   protocol: string;
   host: string;
@@ -43,25 +43,22 @@ export interface CreateOperationProps {
   interval: number;
 }
 
-export class OperationEntity extends AggregateRoot<OperationProps> {
+export class ScheduleEntity extends AggregateRoot<ScheduleProps> {
   protected readonly _id: AggregateID;
 
-  static create(
-    props: CreateOperationProps,
-    entityId?: string,
-  ): OperationEntity {
+  static create(props: CreateScheduleProps, entityId?: string): ScheduleEntity {
     const id = entityId || v4();
-    const operation = new OperationEntity({ id, props });
+    const schedule = new ScheduleEntity({ id, props });
     /* adding "UserCreated" Domain Event that will be published
     eventually so an event handler somewhere may receive it and do an
     appropriate action. Multiple events can be added if needed. */
-    operation.addEvent(
-      new OperationCreatedDomainEvent({
+    schedule.addEvent(
+      new ScheduleCreatedDomainEvent({
         aggregateId: id,
-        ...operation.getProps(),
+        ...schedule.getProps(),
       }),
     );
-    return operation;
+    return schedule;
   }
 
   /* You can create getters only for the properties that you need to
@@ -72,7 +69,7 @@ export class OperationEntity extends AggregateRoot<OperationProps> {
 
   delete(): void {
     this.addEvent(
-      new OperationDeletedDomainEvent({
+      new ScheduleDeletedDomainEvent({
         aggregateId: this.id,
       }),
     );

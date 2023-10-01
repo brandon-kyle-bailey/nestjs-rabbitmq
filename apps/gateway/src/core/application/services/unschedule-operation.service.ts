@@ -8,11 +8,13 @@ import {
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
 import { AdapterNames } from 'libs/common/enum/adapters/adapters.enum';
-import { OperationCreatedDomainEvent } from '../../domain/entities/operation.entity';
+import { OperationDeletedDomainEvent } from '../../domain/entities/operation.entity';
 import { OperationIntegrationEvents } from 'libs/events/operation.events';
 
 @Injectable()
-export class ScheduleOperationService implements OnModuleInit, OnModuleDestroy {
+export class UnscheduleOperationService
+  implements OnModuleInit, OnModuleDestroy
+{
   constructor(
     @Inject(AdapterNames.SchedulerService)
     protected schedulerService: ClientProxy,
@@ -25,14 +27,14 @@ export class ScheduleOperationService implements OnModuleInit, OnModuleDestroy {
     await this.schedulerService.close();
   }
 
-  @OnEvent(OperationCreatedDomainEvent.name, { async: true, promisify: true })
-  async handle(event: OperationCreatedDomainEvent): Promise<any> {
+  @OnEvent(OperationDeletedDomainEvent.name, { async: true, promisify: true })
+  async handle(event: OperationDeletedDomainEvent): Promise<any> {
     this.logger.debug(
-      'ScheduleOperationService.handle called with event',
+      'UnscheduleOperationService.handle called with event',
       JSON.stringify(event),
     );
     const result = this.schedulerService.emit(
-      OperationIntegrationEvents.Schedule,
+      OperationIntegrationEvents.Unschedule,
       JSON.stringify(event),
     );
   }

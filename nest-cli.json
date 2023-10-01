@@ -99,6 +99,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/dto/tsconfig.lib.json"
       }
+    },
+    "events": {
+      "type": "library",
+      "root": "libs/events",
+      "entryFile": "index",
+      "sourceRoot": "libs/events/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/events/tsconfig.lib.json"
+      }
+    },
+    "processor": {
+      "type": "application",
+      "root": "apps/processor",
+      "entryFile": "main",
+      "sourceRoot": "apps/processor/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/processor/tsconfig.app.json"
+      }
     }
   }
 }

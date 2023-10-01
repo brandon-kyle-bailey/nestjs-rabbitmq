@@ -9,7 +9,9 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "export NODE_ENV=development && nest start --watch",
+    "start:gateway:dev": "export NODE_ENV=development && nest start --watch",
+    "start:scheduler:dev": "export NODE_ENV=development && nest start scheduler --watch",
+    "start:processor:dev": "export NODE_ENV=development && nest start processor --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/app/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -96,7 +98,8 @@
       "^@app/guards(|/.*)$": "<rootDir>/libs/guards/src/$1",
       "^@app/utils(|/.*)$": "<rootDir>/libs/utils/src/$1",
       "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/dto(|/.*)$": "<rootDir>/libs/dto/src/$1"
+      "^@app/dto(|/.*)$": "<rootDir>/libs/dto/src/$1",
+      "^@app/events(|/.*)$": "<rootDir>/libs/events/src/$1"
     }
   }
 }
