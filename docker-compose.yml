@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    user: postgres
+    secrets:
+      - postgres-password
+    environment:
+      - POSTGRES_DB=core
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [CMD, pg_isready]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+secrets:
+  postgres-password:
+    file: postgres-password.txt
