@@ -6,6 +6,9 @@ export default () => ({
   services: {
     gateway: {
       name: AdapterNames.GatewayService,
+      web: {
+        port: parseInt(process.env.PORT_GATEWAY, 10),
+      },
       database: {
         driver: process.env.DATABASE_DRIVER,
         host: process.env.DATABASE_HOST,

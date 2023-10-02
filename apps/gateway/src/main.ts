@@ -7,6 +7,7 @@ const {
   services: {
     gateway: {
       rabbitmq: { username, password, host, port, queue },
+      web: { port: webPort },
     },
   },
 } = configuration();
@@ -29,6 +30,6 @@ async function bootstrap() {
   );
   app.startAllMicroservices();
   app.enableShutdownHooks();
-  await app.listen(3000);
+  await app.listen(webPort);
 }
 bootstrap();
