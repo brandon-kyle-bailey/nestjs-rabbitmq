@@ -14,6 +14,11 @@ import { CreateScheduleService } from './core/application/services/create-schedu
 import { DeleteScheduleService } from './core/application/services/delete-schedule.service';
 import { CreateScheduleEventController } from './interface/controllers/create-schedule.event.controller';
 import { DeleteScheduleEventController } from './interface/controllers/delete-schedule.event.controller';
+import { RequestContextModule } from 'nestjs-request-context';
+import { LoadScheduleService } from './core/application/services/load-schedule.service';
+import { UnloadScheduleService } from './core/application/services/unload-schedule.service';
+import { PickupSchedulesService } from './core/application/services/pickup-schedules.service';
+import { PickupSchedulesCliController } from './interface/controllers/pickup-schedules.cli.controller';
 
 const entities = [ScheduleRepositoryEntity];
 
@@ -21,11 +26,18 @@ const repositories = [ScheduleRepository];
 
 const mappers = [ScheduleMapper];
 
-const services = [CreateScheduleService, DeleteScheduleService];
+const services = [
+  CreateScheduleService,
+  DeleteScheduleService,
+  LoadScheduleService,
+  UnloadScheduleService,
+  PickupSchedulesService,
+];
 
 const controllers = [
   CreateScheduleEventController,
   DeleteScheduleEventController,
+  PickupSchedulesCliController,
 ];
 
 @Module({
@@ -36,12 +48,13 @@ const controllers = [
     }),
     CqrsModule,
     DatabaseModule,
+    ProcessorModule,
+    RequestContextModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),
-    ProcessorModule,
   ],
   controllers,
-  providers: [Logger, ConfigService],
+  providers: [Logger, ConfigService, ...repositories, ...mappers, ...services],
 })
 export class SchedulerModule {}

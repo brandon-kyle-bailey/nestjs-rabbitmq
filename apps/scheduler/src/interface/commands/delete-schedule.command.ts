@@ -1,11 +1,11 @@
 import { Command, CommandProps } from 'libs/ddd/command.base';
 
 export class DeleteScheduleCommand extends Command {
-  readonly id: string;
+  readonly operationId: string;
 
   private constructor(props: CommandProps<DeleteScheduleCommand>) {
     super(props);
-    this.id = props.id;
+    this.operationId = props.operationId;
   }
 
   static create(

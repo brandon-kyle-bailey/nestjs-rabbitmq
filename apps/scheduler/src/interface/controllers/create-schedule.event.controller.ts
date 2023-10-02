@@ -1,89 +1,39 @@
-import { HttpService } from '@nestjs/axios';
 import { Controller, Logger } from '@nestjs/common';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { CommandBus } from '@nestjs/cqrs';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { SchedulerRegistry } from '@nestjs/schedule';
-
-import axios, { AxiosError } from 'axios';
 import { OperationIntegrationEvents } from 'libs/events/operation.events';
-import { catchError, firstValueFrom } from 'rxjs';
-
-// TODO... seperate invoke handler into event processor service
-
-axios.interceptors.request.use(
-  function (config) {
-    config.headers.requestStartTime = Date.now();
-    return config;
-  },
-  null,
-  { synchronous: true },
-);
-
-axios.interceptors.response.use(
-  function (response) {
-    response.headers.duration =
-      Date.now() - response.config.headers.requestStartTime;
-    return response;
-  },
-  null,
-  { synchronous: true },
-);
+import { ScheduleMapper } from '../../infrastructure/mappers/schedule.mapper';
+import { ScheduleResponseDto } from '../dtos/schedule/schedule.response.dto';
+import { CreateScheduleRequestDto } from '../dtos/schedule/create-schedule.request.dto';
+import { CreateScheduleCommand } from '../commands/create-schedule.command';
 
 @Controller()
 export class CreateScheduleEventController {
   constructor(
     protected readonly logger: Logger,
-    protected readonly schedulerRegistry: SchedulerRegistry,
-    protected readonly eventEmitter: EventEmitter2,
+    protected readonly commandBus: CommandBus,
+    protected readonly scheduleMapper: ScheduleMapper,
   ) {}
 
   @EventPattern(OperationIntegrationEvents.Schedule)
   async create(
-    @Payload() payload: any,
+    @Payload() payload: CreateScheduleRequestDto,
     @Ctx() context: RmqContext,
-  ): Promise<any> {
-    this.logger.debug('CreateScheduledEventController.create called');
-    const data = JSON.parse(payload);
-    if (
-      this.schedulerRegistry.doesExist(
-        'interval',
-        `${data.aggregateId}_scheduled_event`,
-      )
-    ) {
-      this.logger.debug('interval already exists');
-      return;
+  ): Promise<ScheduleResponseDto> {
+    try {
+      const command = CreateScheduleCommand.create({
+        operationId: payload.operationId,
+        type: payload.type,
+        interval: payload.interval,
+        active: payload.active,
+      });
+      const result = await this.commandBus.execute(command);
+      return this.scheduleMapper.toResponse(result);
+    } catch (error) {
+      this.logger.error(
+        'CreateScheduleEventController.create encountered an error',
+        error,
+      );
     }
-    this.schedulerRegistry.addInterval(
-      `${data.aggregateId}_scheduled_event`,
-      setInterval(async () => {
-        this.eventEmitter.emit('schedule.invoke', JSON.stringify(data));
-      }, data.interval),
-    );
-  }
-
-  @OnEvent('schedule.invoke', { async: true, promisify: true })
-  async processEvent(payload: any) {
-    this.logger.debug(
-      'CreateScheduleEventController.processEvent called with payload',
-      payload,
-    );
-    const data = JSON.parse(payload);
-    const url = `${data.protocol}://${data.host}:${data.port}`;
-    // const { status, headers } = await firstValueFrom(
-    //   this.httpService.get(url).pipe(
-    //     catchError((error: AxiosError) => {
-    //       this.logger.error(error);
-    //       throw error.response.status;
-    //     }),
-    //   ),
-    // );
-    // this.logger.debug(
-    //   `CreateScheduleEventController.processEvent result status from ping`,
-    //   status,
-    // );
-    // this.logger.debug(
-    //   `CreateScheduleEventController.processEvent result duration from ping`,
-    //   headers.duration,
-    // );
   }
 }

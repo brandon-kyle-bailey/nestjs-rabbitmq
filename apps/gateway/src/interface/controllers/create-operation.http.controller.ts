@@ -13,7 +13,7 @@ export class CreateOperationController {
     protected readonly operationMapper: OperationMapper,
   ) {}
 
-  @Post('operation/create')
+  @Post('operation')
   async create(
     @Body() body: CreateOperationRequestDto,
   ): Promise<OperationResponseDto> {

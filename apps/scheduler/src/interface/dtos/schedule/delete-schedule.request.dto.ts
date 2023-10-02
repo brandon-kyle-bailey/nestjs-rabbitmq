@@ -1,3 +1,3 @@
 export class DeleteScheduleRequestDto {
-  readonly id: string;
+  readonly operationId: string;
 }

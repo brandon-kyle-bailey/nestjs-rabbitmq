@@ -1,22 +1,17 @@
 import { Body, Controller, Delete, Logger } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateOperationRequestDto } from '../dtos/operation/create-operation.request.dto';
-import { CreateOperationCommand } from '../commands/create-operation.command';
-import { OperationResponseDto } from '../dtos/operation/operation.response.dto';
-import { OperationMapper } from '../../infrastructure/mappers/operation.mapper';
+import { AggregateID } from 'libs/ddd/entity.base';
 import { DeleteOperationRequestDto } from '../dtos/operation/delete-operation.request.dto';
 import { DeleteOperationCommand } from '../commands/delete-operation.command';
-import { AggregateID } from 'libs/ddd/entity.base';
 
 @Controller('v1')
 export class DeleteOperationController {
   constructor(
     protected readonly logger: Logger,
     protected readonly commandBus: CommandBus,
-    protected readonly operationMapper: OperationMapper,
   ) {}
 
-  @Delete('operation/delete')
+  @Delete('operation')
   async delete(@Body() body: DeleteOperationRequestDto): Promise<AggregateID> {
     try {
       const command = DeleteOperationCommand.create(body);

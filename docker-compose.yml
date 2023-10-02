@@ -63,7 +63,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 secrets:
   postgres-password:
     file: postgres-password.txt

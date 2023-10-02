@@ -12,14 +12,22 @@ export class DeleteScheduleService implements ICommandHandler {
     @Inject(ScheduleRepository)
     protected readonly scheduleRepository: ScheduleRepositoryPort,
   ) {}
+
   async execute(command: DeleteScheduleCommand): Promise<AggregateID> {
     try {
+      this.logger.debug(
+        `DeleteScheduleService.execute invoked with command`,
+        command,
+      );
+      this.logger.debug(command.operationId);
       await this.scheduleRepository.transaction(async () => {
-        const operation = await this.scheduleRepository.findOneById(command.id);
-        operation.delete();
-        await this.scheduleRepository.delete(operation);
+        const schedule = await this.scheduleRepository.findOneByOperationId(
+          command.operationId,
+        );
+        schedule.delete();
+        await this.scheduleRepository.delete(schedule);
       });
-      return command.id;
+      return command.operationId;
     } catch (error) {
       this.logger.error(
         'DeleteScheduleService.execute encountered an error',

@@ -73,6 +73,10 @@ export abstract class Entity<EntityProps> {
     return this._updatedAt;
   }
 
+  setUpdatedAt(updatedAt: Date): void {
+    this._updatedAt = updatedAt;
+  }
+
   get deletedAt(): Date {
     return this._deletedAt;
   }

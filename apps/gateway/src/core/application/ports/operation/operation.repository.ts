@@ -17,10 +17,13 @@ export class OperationRepository implements OperationRepositoryPort {
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+  async save(entity: OperationEntity): Promise<void> {
+    await this.repo.save(this.mapper.toPersistence(entity));
+    return await entity.publishEvents(this.logger, this.eventEmitter);
+  }
   async insert(entity: OperationEntity): Promise<void> {
     const result = await this.repo.insert(this.mapper.toPersistence(entity));
-    await entity.publishEvents(this.logger, this.eventEmitter);
-    return;
+    return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<OperationEntity> {
     const result = await this.repo.findOneBy({ id });
@@ -41,7 +44,7 @@ export class OperationRepository implements OperationRepositoryPort {
     });
     return new Paginated({
       count: result.length,
-      limit: result.length,
+      limit: Number(params.limit),
       page: params.page,
       data: result.map((record) => this.mapper.toDomain(record)),
     });

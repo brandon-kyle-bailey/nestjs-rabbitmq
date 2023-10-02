@@ -20,7 +20,6 @@ export class OperationMapper
       protocol: copy.protocol,
       host: copy.host,
       port: copy.port,
-      interval: copy.interval,
     };
     return record;
   }
@@ -30,13 +29,13 @@ export class OperationMapper
       id: record.id,
       createdAt: new Date(record.createdAt),
       updatedAt: new Date(record.updatedAt),
-      deletedAt: new Date(record.deletedAt),
+      deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
         name: record.name,
         protocol: record.protocol,
         host: record.host,
         port: record.port,
-        interval: record.interval,
+        interval: undefined,
       },
     });
     return entity;
@@ -49,7 +48,6 @@ export class OperationMapper
     response.protocol = props.protocol;
     response.host = props.host;
     response.port = props.port;
-    response.interval = props.interval;
     return response;
   }
 }

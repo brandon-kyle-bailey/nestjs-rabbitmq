@@ -1,3 +1,4 @@
+import { AggregateID } from 'libs/ddd/entity.base';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,13 +7,12 @@ import {
   DeleteDateColumn,
   Column,
 } from 'typeorm';
+import { ScheduleType } from '../../../domain/entities/schedule.entity';
 
 export interface ScheduleEntityProps {
-  readonly name: string;
-  readonly protocol: string;
-  readonly host: string;
-  readonly port: number;
-  readonly interval: number;
+  readonly operationId: AggregateID;
+  readonly type: ScheduleType;
+  readonly active: boolean;
 }
 
 @Entity('schedule')
@@ -32,17 +32,14 @@ export class ScheduleRepositoryEntity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column({ length: 500 })
-  name: string;
+  @Column('uuid')
+  operationId: string;
 
   @Column()
-  protocol: string;
+  type: string;
 
   @Column()
-  host: string;
-
-  @Column()
-  port: number;
+  active: boolean;
 
   @Column()
   interval: number;

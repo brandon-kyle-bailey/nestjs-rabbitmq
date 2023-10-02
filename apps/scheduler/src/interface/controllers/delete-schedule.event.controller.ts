@@ -1,44 +1,36 @@
-import { HttpService } from '@nestjs/axios';
 import { Controller, Logger } from '@nestjs/common';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { OperationIntegrationEvents } from 'libs/events/operation.events';
-
-// TODO... seperate invoke handler into event processor service
+import { DeleteScheduleRequestDto } from '../dtos/schedule/delete-schedule.request.dto';
+import { AggregateID } from 'libs/ddd/entity.base';
+import { DeleteScheduleCommand } from '../commands/delete-schedule.command';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Controller()
 export class DeleteScheduleEventController {
   constructor(
     protected readonly logger: Logger,
-    protected readonly schedulerRegistry: SchedulerRegistry,
-    protected readonly eventEmitter: EventEmitter2,
+    protected readonly commandBus: CommandBus,
   ) {}
 
   @EventPattern(OperationIntegrationEvents.Unschedule)
   async delete(
-    @Payload() payload: any,
+    @Payload() payload: DeleteScheduleRequestDto,
     @Ctx() context: RmqContext,
-  ): Promise<any> {
-    this.logger.debug('DeleteScheduleEventController.delete called');
-    const data = JSON.parse(payload);
-    if (
-      !this.schedulerRegistry.doesExist(
-        'interval',
-        `${data.aggregateId}_scheduled_event`,
-      )
-    ) {
-      this.logger.debug('interval does not exist, returning');
-      return;
+  ): Promise<AggregateID> {
+    try {
+      this.logger.debug(
+        `DeleteScheduleEventController.delete invoked with payload`,
+        payload,
+      );
+      const command = DeleteScheduleCommand.create(payload);
+      const result = await this.commandBus.execute(command);
+      return result;
+    } catch (error) {
+      this.logger.error(
+        'DeleteScheduleEventController.delete encountered an error',
+        error,
+      );
     }
-    this.schedulerRegistry.deleteInterval(
-      `${data.aggregateId}_scheduled_event`,
-    );
-
-    const doestExistAfterDelete = this.schedulerRegistry.doesExist(
-      'interval',
-      `${data.aggregateId}_scheduled_event`,
-    );
-    this.logger.debug('Result of delete interval', doestExistAfterDelete);
   }
 }

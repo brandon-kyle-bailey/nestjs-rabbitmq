@@ -15,14 +15,14 @@ import { OperationIntegrationEvents } from 'libs/events/operation.events';
 export class ScheduleOperationService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject(AdapterNames.SchedulerService)
-    protected schedulerService: ClientProxy,
+    protected service: ClientProxy,
     protected readonly logger: Logger,
   ) {}
   async onModuleInit() {
-    await this.schedulerService.connect();
+    await this.service.connect();
   }
   async onModuleDestroy() {
-    await this.schedulerService.close();
+    await this.service.close();
   }
 
   @OnEvent(OperationCreatedDomainEvent.name, { async: true, promisify: true })
@@ -31,9 +31,12 @@ export class ScheduleOperationService implements OnModuleInit, OnModuleDestroy {
       'ScheduleOperationService.handle called with event',
       JSON.stringify(event),
     );
-    const result = this.schedulerService.emit(
-      OperationIntegrationEvents.Schedule,
-      JSON.stringify(event),
-    );
+    // TODO... create payload interface
+    this.service.emit(OperationIntegrationEvents.Schedule, {
+      operationId: event.aggregateId,
+      type: 'interval',
+      interval: event.interval,
+      active: true,
+    });
   }
 }

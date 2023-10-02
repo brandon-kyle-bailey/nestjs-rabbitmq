@@ -1,7 +1,6 @@
 export class CreateScheduleRequestDto {
-  readonly name: string;
-  readonly protocol: string;
-  readonly host: string;
-  readonly port: number;
+  readonly operationId: string;
+  readonly type: string;
   readonly interval: number;
+  readonly active: boolean;
 }

@@ -12,7 +12,6 @@ export interface OperationEntityProps {
   readonly protocol: string;
   readonly host: string;
   readonly port: number;
-  readonly interval: number;
 }
 
 @Entity('operation')
@@ -43,7 +42,4 @@ export class OperationRepositoryEntity {
 
   @Column()
   port: number;
-
-  @Column()
-  interval: number;
 }

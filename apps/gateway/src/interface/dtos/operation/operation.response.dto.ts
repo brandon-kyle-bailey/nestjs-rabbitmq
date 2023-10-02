@@ -5,5 +5,4 @@ export class OperationResponseDto extends ResponseBase {
   protocol: string;
   host: string;
   port: number;
-  interval: number;
 }

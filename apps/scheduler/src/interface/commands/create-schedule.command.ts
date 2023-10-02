@@ -1,19 +1,18 @@
 import { Command, CommandProps } from 'libs/ddd/command.base';
+import { AggregateID } from 'libs/ddd/entity.base';
 
 export class CreateScheduleCommand extends Command {
-  readonly name: string;
-  readonly protocol: string;
-  readonly host: string;
-  readonly port: number;
+  readonly operationId: AggregateID;
+  readonly type: string;
   readonly interval: number;
+  readonly active: boolean;
 
   private constructor(props: CommandProps<CreateScheduleCommand>) {
     super(props);
-    this.name = props.name;
-    this.protocol = props.protocol;
-    this.host = props.host;
-    this.port = props.port;
+    this.operationId = props.operationId;
+    this.type = props.type;
     this.interval = props.interval;
+    this.active = props.active;
   }
 
   static create(

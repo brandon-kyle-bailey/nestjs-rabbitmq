@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { SchedulerModule } from './scheduler.module';
 import configuration from 'libs/config/configuration';
+import { Logger } from '@nestjs/common';
+import { PickupSchedulesCliController } from './interface/controllers/pickup-schedules.cli.controller';
 
 const {
   services: {
@@ -26,6 +28,15 @@ async function bootstrap() {
       },
     },
   );
+
+  const pickupSchedulesController = app.get<PickupSchedulesCliController>(
+    PickupSchedulesCliController,
+  );
+
+  app.enableShutdownHooks();
   await app.listen();
+
+  // invoke warmup controller for schedule pickup
+  await pickupSchedulesController.pickup();
 }
 bootstrap();

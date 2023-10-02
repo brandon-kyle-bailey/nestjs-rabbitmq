@@ -1,11 +1,11 @@
-import { OperationRepositoryEntity } from 'apps/gateway/src/core/application/ports/operation/operation.entity';
+import { ProcessEventRepositoryEntity } from 'apps/processor/src/core/application/ports/process-event/process-event.entity';
 import configuration from 'libs/config/configuration';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 const {
   services: {
-    scheduler: {
+    processor: {
       database: { driver, host, port, username, password, name },
     },
   },
@@ -19,7 +19,7 @@ export const databaseConfiguration = {
   username,
   password,
   database: name,
-  entities: [OperationRepositoryEntity],
+  entities: [ProcessEventRepositoryEntity],
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
 };
 

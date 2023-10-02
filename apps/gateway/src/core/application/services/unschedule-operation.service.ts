@@ -16,15 +16,15 @@ export class UnscheduleOperationService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(
-    @Inject(AdapterNames.SchedulerService)
-    protected schedulerService: ClientProxy,
     protected readonly logger: Logger,
+    @Inject(AdapterNames.SchedulerService)
+    protected service: ClientProxy,
   ) {}
   async onModuleInit() {
-    await this.schedulerService.connect();
+    await this.service.connect();
   }
   async onModuleDestroy() {
-    await this.schedulerService.close();
+    await this.service.close();
   }
 
   @OnEvent(OperationDeletedDomainEvent.name, { async: true, promisify: true })
@@ -33,9 +33,9 @@ export class UnscheduleOperationService
       'UnscheduleOperationService.handle called with event',
       JSON.stringify(event),
     );
-    const result = this.schedulerService.emit(
-      OperationIntegrationEvents.Unschedule,
-      JSON.stringify(event),
-    );
+    // TODO... create payload interface
+    const result = this.service.emit(OperationIntegrationEvents.Unschedule, {
+      operationId: event.aggregateId,
+    });
   }
 }

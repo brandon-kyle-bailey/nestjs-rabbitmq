@@ -15,15 +15,30 @@ export class ScheduleRepository implements ScheduleRepositoryPort {
     protected readonly repo: Repository<ScheduleRepositoryEntity>,
     protected readonly mapper: ScheduleMapper,
     protected readonly logger: Logger,
-    private eventEmitter: EventEmitter2,
+    protected readonly eventEmitter: EventEmitter2,
   ) {}
+  async save(entity: ScheduleEntity): Promise<void> {
+    await this.repo.save(this.mapper.toPersistence(entity));
+    return await entity.publishEvents(this.logger, this.eventEmitter);
+  }
+  async findAllActive(): Promise<ScheduleEntity[]> {
+    const result = await this.repo.findBy({ active: true });
+    return result.map((record) => this.mapper.toDomain(record));
+  }
   async insert(entity: ScheduleEntity): Promise<void> {
-    const result = await this.repo.insert(this.mapper.toPersistence(entity));
+    const persistenceModel = this.mapper.toPersistence(entity);
+    await this.repo.insert(persistenceModel);
     await entity.publishEvents(this.logger, this.eventEmitter);
     return;
   }
   async findOneById(id: string): Promise<ScheduleEntity> {
     const result = await this.repo.findOneBy({ id });
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
+
+  async findOneByOperationId(operationId: string): Promise<ScheduleEntity> {
+    const result = await this.repo.findOneBy({ operationId });
     const entity = this.mapper.toDomain(result);
     return entity;
   }

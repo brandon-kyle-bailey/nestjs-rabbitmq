@@ -16,6 +16,13 @@ import { ScheduleOperationService } from './core/application/services/schedule-o
 import { DeleteOperationController } from './interface/controllers/delete-operation.http.controller';
 import { DeleteOperationService } from './core/application/services/delete-operation.service';
 import { UnscheduleOperationService } from './core/application/services/unschedule-operation.service';
+import { GetOperationEventController } from './interface/controllers/get-operation.event.controller';
+import { GetOperationService } from './core/application/services/get-operation.service';
+import { GetOperationController } from './interface/controllers/get-operation.http.controller';
+import { UpdateOperationController } from './interface/controllers/update-operation.http.controller';
+import { UpdateOperationService } from './core/application/services/update-operation.service';
+import { ListOperationsController } from './interface/controllers/list-operations.http.controller';
+import { ListOperationsService } from './core/application/services/list-operations.service';
 
 const entities = [OperationRepositoryEntity];
 
@@ -25,12 +32,22 @@ const mappers = [OperationMapper];
 
 const services = [
   CreateOperationService,
+  GetOperationService,
   DeleteOperationService,
   ScheduleOperationService,
   UnscheduleOperationService,
+  UpdateOperationService,
+  ListOperationsService,
 ];
 
-const controllers = [CreateOperationController, DeleteOperationController];
+const controllers = [
+  GetOperationController,
+  CreateOperationController,
+  DeleteOperationController,
+  GetOperationEventController,
+  UpdateOperationController,
+  ListOperationsController,
+];
 
 @Module({
   imports: [
@@ -46,13 +63,6 @@ const controllers = [CreateOperationController, DeleteOperationController];
     EventEmitterModule.forRoot({ global: true }),
   ],
   controllers,
-  providers: [
-    Logger,
-    ConfigService,
-    DatabaseModule,
-    ...repositories,
-    ...mappers,
-    ...services,
-  ],
+  providers: [Logger, ConfigService, ...repositories, ...mappers, ...services],
 })
 export class GatewayModule {}

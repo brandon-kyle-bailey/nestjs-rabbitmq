@@ -25,6 +25,12 @@ export class OperationDeletedDomainEvent extends DomainEvent {
   }
 }
 
+export class OperationUpdatedDomainEvent extends DomainEvent {
+  constructor(props: DomainEventProps<OperationUpdatedDomainEvent>) {
+    super(props);
+  }
+}
+
 // All properties that an Operation has
 export interface OperationProps {
   name: string;
@@ -42,6 +48,9 @@ export interface CreateOperationProps {
   port: number;
   interval: number;
 }
+
+export interface UpdateOperationProps
+  extends Partial<Omit<CreateOperationProps, 'interval'>> {}
 
 export class OperationEntity extends AggregateRoot<OperationProps> {
   protected readonly _id: AggregateID;
@@ -69,6 +78,52 @@ export class OperationEntity extends AggregateRoot<OperationProps> {
   encapsulated. To get all entity properties (for saving it to a
   database or mapping a response) use .getProps() method
   defined in a EntityBase parent class */
+
+  get name(): string {
+    return this.props.name;
+  }
+  get protocol(): string {
+    return this.props.protocol;
+  }
+  get host(): string {
+    return this.props.host;
+  }
+  get port(): number {
+    return this.props.port;
+  }
+
+  private _setName(name: string): void {
+    this.props.name = name;
+  }
+  private _setProtocol(protocol: string): void {
+    this.props.protocol = protocol;
+  }
+  private _setHost(host: string): void {
+    this.props.host = host;
+  }
+  private _setPort(port: number): void {
+    this.props.port = port;
+  }
+
+  update(props: UpdateOperationProps): void {
+    if (props.name) {
+      this._setName(props.name);
+    }
+    if (props.protocol) {
+      this._setProtocol(props.protocol);
+    }
+    if (props.host) {
+      this._setHost(props.host);
+    }
+    if (props.port) {
+      this._setPort(props.port);
+    }
+    this.addEvent(
+      new OperationUpdatedDomainEvent({
+        aggregateId: this.id,
+      }),
+    );
+  }
 
   delete(): void {
     this.addEvent(
