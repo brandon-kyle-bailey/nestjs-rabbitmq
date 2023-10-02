@@ -7,3 +7,4 @@
 - Implement auth microservice
 - Implement billing microservice
   - Stripe
+- Implement caching
