@@ -8,7 +8,7 @@ import {
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
 import {
-  ScheduleCreatedDomainEvent,
+  ScheduleLoadDomainEvent,
   ScheduleType,
 } from '../../domain/entities/schedule.entity';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -30,8 +30,8 @@ export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
     await this.service.close();
   }
 
-  @OnEvent(ScheduleCreatedDomainEvent.name, { async: true, promisify: true })
-  async handle(event: ScheduleCreatedDomainEvent): Promise<void> {
+  @OnEvent(ScheduleLoadDomainEvent.name, { async: true, promisify: true })
+  async handle(event: ScheduleLoadDomainEvent): Promise<void> {
     this.logger.debug(
       'LoadScheduleService.handle called with event',
       JSON.stringify(event),

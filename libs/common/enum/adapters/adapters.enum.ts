@@ -4,4 +4,5 @@ export enum TransportAdapterNames {
   TransportProcessorAdapterService = 'TransportProcessorAdapterService',
   TransportSchedulerAdapterService = 'TransportSchedulerAdapterService',
   TransportGatewayAdapterService = 'TransportGatewayAdapterService',
+  TransportNotificationsAdapterService = 'TransportNotificationsAdapterService',
 }

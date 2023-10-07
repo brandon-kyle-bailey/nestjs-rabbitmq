@@ -32,7 +32,7 @@ export class ScheduleMapper
       id: record.id,
       createdAt: new Date(record.createdAt),
       updatedAt: new Date(record.updatedAt),
-      deletedAt: new Date(record.deletedAt),
+      deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
         operationId: record.operationId,
         type: record.type as ScheduleType,

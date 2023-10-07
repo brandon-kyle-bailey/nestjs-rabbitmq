@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
-  ScheduleDeletedDomainEvent,
   ScheduleType,
+  ScheduleUnloadDomainEvent,
 } from '../../domain/entities/schedule.entity';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
@@ -10,16 +10,16 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 export class UnloadScheduleService {
   constructor(
     protected readonly logger: Logger,
-    protected readonly schedulerRegistry: SchedulerRegistry,
+    protected readonly registry: SchedulerRegistry,
   ) {}
 
-  @OnEvent(ScheduleDeletedDomainEvent.name, { async: true, promisify: true })
-  async handle(event: ScheduleDeletedDomainEvent): Promise<any> {
+  @OnEvent(ScheduleUnloadDomainEvent.name, { async: true, promisify: true })
+  async handle(event: ScheduleUnloadDomainEvent): Promise<any> {
     this.logger.debug(
       'UnloadScheduleService.handle called with event',
       JSON.stringify(event),
     );
-    if (!this.schedulerRegistry.doesExist(event.type, event.operationId)) {
+    if (!this.registry.doesExist(event.type, event.operationId)) {
       this.logger.debug(
         `Schedule does not exist for operation ${event.operationId}. Returning`,
       );
@@ -30,10 +30,10 @@ export class UnloadScheduleService {
         this.logger.debug('Cron type not supported yet');
         return;
       case ScheduleType.Interval:
-        this.schedulerRegistry.deleteInterval(event.operationId);
+        this.registry.deleteInterval(event.operationId);
         return;
       case ScheduleType.Timeout:
-        this.schedulerRegistry.deleteTimeout(event.operationId);
+        this.registry.deleteTimeout(event.operationId);
         return;
       default:
         this.logger.debug('not sure what to do with this event');

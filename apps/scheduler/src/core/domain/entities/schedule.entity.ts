@@ -17,7 +17,51 @@ export class ScheduleCreatedDomainEvent extends DomainEvent {
   }
 }
 
+export class ScheduleLoadDomainEvent extends DomainEvent {
+  readonly operationId: AggregateID;
+  readonly type: ScheduleType;
+  readonly interval: number;
+  readonly active: boolean;
+  constructor(props: DomainEventProps<ScheduleCreatedDomainEvent>) {
+    super(props);
+    this.operationId = props.operationId;
+    this.interval = props.interval;
+    this.type = props.type;
+    this.active = props.active;
+  }
+}
+
 export class ScheduleDeletedDomainEvent extends DomainEvent {
+  readonly operationId: AggregateID;
+  readonly type: ScheduleType;
+  constructor(props: DomainEventProps<ScheduleDeletedDomainEvent>) {
+    super(props);
+    this.operationId = props.operationId;
+    this.type = props.type;
+  }
+}
+
+export class ScheduleUnloadDomainEvent extends DomainEvent {
+  readonly operationId: AggregateID;
+  readonly type: ScheduleType;
+  constructor(props: DomainEventProps<ScheduleDeletedDomainEvent>) {
+    super(props);
+    this.operationId = props.operationId;
+    this.type = props.type;
+  }
+}
+
+export class SchedulePausedDomainEvent extends DomainEvent {
+  readonly operationId: AggregateID;
+  readonly type: ScheduleType;
+  constructor(props: DomainEventProps<ScheduleDeletedDomainEvent>) {
+    super(props);
+    this.operationId = props.operationId;
+    this.type = props.type;
+  }
+}
+
+export class ScheduleResumedDomainEvent extends DomainEvent {
   readonly operationId: AggregateID;
   readonly type: ScheduleType;
   constructor(props: DomainEventProps<ScheduleDeletedDomainEvent>) {
@@ -71,6 +115,10 @@ export class ScheduleEntity extends AggregateRoot<ScheduleProps> {
   database or mapping a response) use .getProps() method
   defined in a EntityBase parent class */
 
+  setInterval(interval: number): void {
+    this.props.interval = interval;
+  }
+
   create(): void {
     this.addEvent(
       new ScheduleCreatedDomainEvent({
@@ -80,9 +128,48 @@ export class ScheduleEntity extends AggregateRoot<ScheduleProps> {
     );
   }
 
+  load(): void {
+    this.addEvent(
+      new ScheduleLoadDomainEvent({
+        aggregateId: this.id,
+        ...this.getProps(),
+      }),
+    );
+  }
+
+  pause(): void {
+    this.props.active = false;
+    this.addEvent(
+      new SchedulePausedDomainEvent({
+        aggregateId: this.id,
+        ...this.getProps(),
+      }),
+    );
+  }
+
+  resume(): void {
+    this.props.active = true;
+    this.addEvent(
+      new ScheduleResumedDomainEvent({
+        aggregateId: this.id,
+        ...this.getProps(),
+      }),
+    );
+  }
+
   delete(): void {
     this.addEvent(
       new ScheduleDeletedDomainEvent({
+        aggregateId: this.id,
+        operationId: this.getProps().operationId,
+        type: this.getProps().type,
+      }),
+    );
+  }
+
+  unload(): void {
+    this.addEvent(
+      new ScheduleUnloadDomainEvent({
         aggregateId: this.id,
         operationId: this.getProps().operationId,
         type: this.getProps().type,

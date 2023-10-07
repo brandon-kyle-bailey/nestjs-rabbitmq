@@ -24,6 +24,12 @@ import { UpdateOperationService } from './core/application/services/update-opera
 import { ListOperationsController } from './interface/controllers/list-operations.http.controller';
 import { ListOperationsService } from './core/application/services/list-operations.service';
 import { AuthModule } from './infrastructure/adapters/auth/auth.module';
+import { PauseOperationController } from './interface/controllers/pause-operation.http.controller';
+import { PauseOperationService } from './core/application/services/pause-operation.service';
+import { ResumeOperationService } from './core/application/services/resume-operation.service';
+import { ResumeOperationController } from './interface/controllers/resume-operation.http.controller';
+import { UpdateOperationIntervalController } from './interface/controllers/update-operation-interval.http.controller';
+import { UpdateOperationIntervalService } from './core/application/services/update-operation-interval.service';
 
 const entities = [OperationRepositoryEntity];
 
@@ -39,6 +45,9 @@ const services = [
   UnscheduleOperationService,
   UpdateOperationService,
   ListOperationsService,
+  PauseOperationService,
+  ResumeOperationService,
+  UpdateOperationIntervalService,
 ];
 
 const controllers = [
@@ -48,6 +57,9 @@ const controllers = [
   GetOperationEventController,
   UpdateOperationController,
   ListOperationsController,
+  PauseOperationController,
+  ResumeOperationController,
+  UpdateOperationIntervalController,
 ];
 
 @Module({

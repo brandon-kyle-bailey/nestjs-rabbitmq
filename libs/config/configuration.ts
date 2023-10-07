@@ -183,5 +183,40 @@ export default () => ({
         },
       },
     },
+    notifications: {
+      web: {
+        port: parseInt(process.env.NOTIFICATIONS_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportNotificationsAdapterService,
+          url: `amqp://${process.env.NOTIFICATIONS_RABBITMQ_USERNAME}:${
+            process.env.NOTIFICATIONS_RABBITMQ_PASSWORD
+          }@${process.env.NOTIFICATIONS_RABBITMQ_HOST}:${parseInt(
+            process.env.NOTIFICATIONS_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.NOTIFICATIONS_RABBITMQ_HOST,
+          port: parseInt(process.env.NOTIFICATIONS_RABBITMQ_PORT, 10),
+          queue: process.env.NOTIFICATIONS_RABBITMQ_QUEUE,
+          username: process.env.NOTIFICATIONS_RABBITMQ_USERNAME,
+          password: process.env.NOTIFICATIONS_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
+        },
+      },
+      database: {
+        postgres: {
+          driver: process.env.NOTIFICATIONS_DATABASE_DRIVER,
+          host: process.env.NOTIFICATIONS_DATABASE_HOST,
+          port: parseInt(process.env.NOTIFICATIONS_DATABASE_PORT, 10),
+          name: process.env.NOTIFICATIONS_DATABASE_NAME,
+          username: process.env.NOTIFICATIONS_DATABASE_USERNAME,
+          password: process.env.NOTIFICATIONS_DATABASE_PASSWORD,
+        },
+      },
+    },
   },
 });

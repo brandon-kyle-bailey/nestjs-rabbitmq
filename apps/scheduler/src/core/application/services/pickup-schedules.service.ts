@@ -24,6 +24,7 @@ export class PickupSchedulesService implements ICommandHandler {
       const schedules = await this.repo.findAllActive();
       schedules.map(async (schedule) => {
         schedule.create();
+        schedule.load();
         await schedule.publishEvents(this.logger, this.eventEmitter);
       });
       return;

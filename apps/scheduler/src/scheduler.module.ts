@@ -19,6 +19,12 @@ import { LoadScheduleService } from './core/application/services/load-schedule.s
 import { UnloadScheduleService } from './core/application/services/unload-schedule.service';
 import { PickupSchedulesService } from './core/application/services/pickup-schedules.service';
 import { PickupSchedulesCliController } from './interface/controllers/pickup-schedules.cli.controller';
+import { ResumeScheduleService } from './core/application/services/resume-schedule.service';
+import { PauseScheduleService } from './core/application/services/pause-schedule.service';
+import { PauseScheduleEventController } from './interface/controllers/pause-schedule.event.controller';
+import { ResumeScheduleEventController } from './interface/controllers/resume-schedule.event.controller';
+import { UpdateScheduleIntervalEventController } from './interface/controllers/update-schedule-interval.event.controller';
+import { UpdateScheduleIntervalService } from './core/application/services/update-schedule-interval.service';
 
 const entities = [ScheduleRepositoryEntity];
 
@@ -30,14 +36,20 @@ const services = [
   CreateScheduleService,
   DeleteScheduleService,
   LoadScheduleService,
+  PauseScheduleService,
+  ResumeScheduleService,
   UnloadScheduleService,
   PickupSchedulesService,
+  UpdateScheduleIntervalService,
 ];
 
 const controllers = [
   CreateScheduleEventController,
   DeleteScheduleEventController,
+  PauseScheduleEventController,
+  ResumeScheduleEventController,
   PickupSchedulesCliController,
+  UpdateScheduleIntervalEventController,
 ];
 
 @Module({
