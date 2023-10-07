@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import configuration from 'libs/config/configuration';
-import { ProcessorModule } from './processor.module';
+import { AuthModule } from './auth.module';
 
 const {
   services: {
-    processor: {
+    auth: {
       transport: {
         rabbitmq: { url, queue, queueOptions, noAck },
       },
@@ -15,7 +15,7 @@ const {
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    ProcessorModule,
+    AuthModule,
     {
       transport: Transport.RMQ,
       options: {
@@ -26,6 +26,7 @@ async function bootstrap() {
       },
     },
   );
+
   app.enableShutdownHooks();
   await app.listen();
 }

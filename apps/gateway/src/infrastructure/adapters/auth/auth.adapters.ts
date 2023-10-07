@@ -3,7 +3,7 @@ import configuration from 'libs/config/configuration';
 
 const {
   services: {
-    processor: {
+    auth: {
       transport: {
         rabbitmq: { name, url, queue, queueOptions },
       },

@@ -23,6 +23,7 @@ import { UpdateOperationController } from './interface/controllers/update-operat
 import { UpdateOperationService } from './core/application/services/update-operation.service';
 import { ListOperationsController } from './interface/controllers/list-operations.http.controller';
 import { ListOperationsService } from './core/application/services/list-operations.service';
+import { AuthModule } from './infrastructure/adapters/auth/auth.module';
 
 const entities = [OperationRepositoryEntity];
 
@@ -58,6 +59,7 @@ const controllers = [
     CqrsModule,
     DatabaseModule,
     SchedulerModule,
+    AuthModule,
     RequestContextModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),

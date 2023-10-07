@@ -4,8 +4,9 @@ import configuration from 'libs/config/configuration';
 const {
   services: {
     scheduler: {
-      name,
-      rabbitmq: { url, queue, queueOptions },
+      transport: {
+        rabbitmq: { name, url, queue, queueOptions },
+      },
     },
   },
 } = configuration();

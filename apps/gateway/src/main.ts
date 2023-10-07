@@ -6,8 +6,15 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 const {
   services: {
     gateway: {
-      rabbitmq: { username, password, host, port, queue },
-      web: { port: webPort },
+      transport: {
+        rabbitmq: {
+          url,
+          queueOptions,
+          noAck,
+          gateways: { processor, billing, auth },
+        },
+      },
+      web: { port },
     },
   },
 } = configuration();
@@ -18,18 +25,41 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        urls: [`amqp://${username}:${password}@${host}:${port}`],
-        queue: queue,
-        queueOptions: {
-          durable: true,
-        },
-        noAck: true,
+        urls: [url],
+        queue: processor,
+        queueOptions,
+        noAck,
+      },
+    },
+    { inheritAppConfig: true },
+  );
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [url],
+        queue: auth,
+        queueOptions,
+        noAck,
+      },
+    },
+    { inheritAppConfig: true },
+  );
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [url],
+        queue: billing,
+        queueOptions,
+        noAck,
       },
     },
     { inheritAppConfig: true },
   );
   app.startAllMicroservices();
   app.enableShutdownHooks();
-  await app.listen(webPort);
+
+  await app.listen(port);
 }
 bootstrap();

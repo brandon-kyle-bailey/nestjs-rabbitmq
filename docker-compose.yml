@@ -1,68 +1,147 @@
 version: '3'
 
 services:
-  rabbitmq:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmq
-      - RABBITMQ_DEFAULT_PASS=rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
   postgres-gateway:
     image: postgres
     container_name: postgres-gateway
     restart: always
     user: postgres
-    secrets:
-      - postgres-password
     environment:
       - POSTGRES_DB=gateway
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
     ports:
       - 5432:5432
-    healthcheck:
-      test: [CMD, pg_isready]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-  postgres-scheduler:
+    # healthcheck:
+    #   test: [CMD, pg_isready]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+  rabbitmq-gateway:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-gateway
+    hostname: rabbitmq-gateway
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  postgres-auth:
     image: postgres
-    container_name: postgres-scheduler
+    container_name: postgres-auth
     restart: always
     user: postgres
-    secrets:
-      - postgres-password
     environment:
-      - POSTGRES_DB=schedules
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+      - POSTGRES_DB=auth
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
     ports:
       - 5433:5432
-    healthcheck:
-      test: [CMD, pg_isready]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: [CMD, pg_isready]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+  rabbitmq-auth:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-auth
+    hostname: rabbitmq-auth
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5673:5672
+      - 15673:15672
+
+  postgres-billing:
+    image: postgres
+    container_name: postgres-billing
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_DB=billing
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
+    ports:
+      - 5434:5432
+    # healthcheck:
+    #   test: [CMD, pg_isready]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+  rabbitmq-billing:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-billing
+    hostname: rabbitmq-billing
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5674:5672
+      - 15674:15672
+
   postgres-processor:
     image: postgres
     container_name: postgres-processor
     restart: always
     user: postgres
-    secrets:
-      - postgres-password
     environment:
-      - POSTGRES_DB=processes
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+      - POSTGRES_DB=processor
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
     ports:
-      - 5434:5432
-    healthcheck:
-      test: [CMD, pg_isready]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-secrets:
-  postgres-password:
-    file: postgres-password.txt
+      - 5435:5432
+    # healthcheck:
+    #   test: [CMD, pg_isready]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+  rabbitmq-processor:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-processor
+    hostname: rabbitmq-processor
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5675:5672
+      - 15675:15672
+
+  postgres-scheduler:
+    image: postgres
+    container_name: postgres-scheduler
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_DB=scheduler
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
+    ports:
+      - 5436:5432
+    # healthcheck:
+    #   test: [CMD, pg_isready]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+  rabbitmq-scheduler:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-scheduler
+    hostname: rabbitmq-scheduler
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5676:5672
+      - 15676:15672

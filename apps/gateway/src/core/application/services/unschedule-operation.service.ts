@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
-import { AdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import { OperationDeletedDomainEvent } from '../../domain/entities/operation.entity';
 import { OperationIntegrationEvents } from 'libs/events/operation.events';
+import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 
 @Injectable()
 export class UnscheduleOperationService
@@ -17,7 +17,7 @@ export class UnscheduleOperationService
 {
   constructor(
     protected readonly logger: Logger,
-    @Inject(AdapterNames.SchedulerService)
+    @Inject(TransportAdapterNames.TransportSchedulerAdapterService)
     protected service: ClientProxy,
   ) {}
   async onModuleInit() {

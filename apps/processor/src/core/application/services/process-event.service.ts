@@ -8,8 +8,8 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import axios, { AxiosError } from 'axios';
 import { ClientProxy } from '@nestjs/microservices';
-import { AdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import { OperationIntegrationEvents } from 'libs/events/operation.events';
+import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 
 axios.interceptors.request.use(
   function (config) {
@@ -38,21 +38,21 @@ export class ProcessEventService
     private readonly logger: Logger,
     @Inject(ProcessEventRepository)
     protected readonly repo: ProcessEventRepositoryPort,
-    @Inject(AdapterNames.GatewayService)
-    protected gatewayService: ClientProxy,
+    @Inject(TransportAdapterNames.TransportGatewayAdapterService)
+    protected readonly service: ClientProxy,
     protected readonly httpService: HttpService,
   ) {}
 
   async onModuleInit() {
-    await this.gatewayService.connect();
+    await this.service.connect();
   }
   async onModuleDestroy() {
-    await this.gatewayService.close();
+    await this.service.close();
   }
   async execute(command: ProcessEventCommand): Promise<ProcessEventEntity> {
     try {
       const { protocol, host, port } = await firstValueFrom(
-        this.gatewayService.send(OperationIntegrationEvents.Get, {
+        this.service.send(OperationIntegrationEvents.Get, {
           id: command.operationId,
         }),
       );

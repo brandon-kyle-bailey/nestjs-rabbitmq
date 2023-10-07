@@ -3,7 +3,7 @@ import configuration from 'libs/config/configuration';
 
 const {
   services: {
-    processor: {
+    billing: {
       transport: {
         rabbitmq: { name, url, queue, queueOptions },
       },

@@ -6,19 +6,21 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 const {
   services: {
     gateway: {
-      database: { driver, host, port, username, password, name },
+      database: {
+        postgres: { driver, host, port, username, password, name: database },
+      },
     },
   },
 } = configuration();
 
 export const databaseConfiguration = {
-  type: 'postgres',
+  type: driver,
   nativeDriver: 'pg',
   host,
   port,
   username,
   password,
-  database: name,
+  database,
   entities: [OperationRepositoryEntity],
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
 };

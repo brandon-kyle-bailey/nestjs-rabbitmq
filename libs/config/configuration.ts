@@ -1,98 +1,186 @@
 import * as dotenv from 'dotenv';
-import { AdapterNames } from 'libs/common/enum/adapters/adapters.enum';
+import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 dotenv.config();
 
 export default () => ({
   services: {
     gateway: {
-      name: AdapterNames.GatewayService,
       web: {
-        port: parseInt(process.env.PORT_GATEWAY, 10),
+        port: parseInt(process.env.GATEWAY_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportGatewayAdapterService,
+          url: `amqp://${process.env.GATEWAY_RABBITMQ_USERNAME}:${
+            process.env.GATEWAY_RABBITMQ_PASSWORD
+          }@${process.env.GATEWAY_RABBITMQ_HOST}:${parseInt(
+            process.env.GATEWAY_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.GATEWAY_RABBITMQ_HOST,
+          port: parseInt(process.env.GATEWAY_RABBITMQ_PORT, 10),
+          username: process.env.GATEWAY_RABBITMQ_USERNAME,
+          password: process.env.GATEWAY_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
+          gateways: {
+            processor: process.env.GATEWAY_PROCESSOR_RABBITMQ_QUEUE,
+            auth: process.env.GATEWAY_AUTH_RABBITMQ_QUEUE,
+            billing: process.env.GATEWAY_BILLING_RABBITMQ_QUEUE,
+          },
+        },
       },
       database: {
-        driver: process.env.DATABASE_DRIVER,
-        host: process.env.DATABASE_HOST,
-        port: parseInt(process.env.DATABASE_PORT_GATEWAY, 10),
-        name: process.env.DATABASE_NAME_GATEWAY,
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
-      },
-      rabbitmq: {
-        url: `amqp://${process.env.RABBITMQ_USERNAME}:${
-          process.env.RABBITMQ_PASSWORD
-        }@${process.env.RABBITMQ_HOST}:${parseInt(
-          process.env.RABBITMQ_PORT,
-          10,
-        )}`,
-        host: process.env.RABBITMQ_HOST,
-        port: parseInt(process.env.RABBITMQ_PORT, 10),
-        queue: process.env.RABBITMQ_QUEUE_GATEWAY,
-        username: process.env.RABBITMQ_USERNAME,
-        password: process.env.RABBITMQ_PASSWORD,
-        queueOptions: {
-          durable: true,
+        postgres: {
+          driver: process.env.GATEWAY_DATABASE_DRIVER,
+          host: process.env.GATEWAY_DATABASE_HOST,
+          port: parseInt(process.env.GATEWAY_DATABASE_PORT, 10),
+          name: process.env.GATEWAY_DATABASE_NAME,
+          username: process.env.GATEWAY_DATABASE_USERNAME,
+          password: process.env.GATEWAY_DATABASE_PASSWORD,
         },
-        noAck: false,
       },
     },
-    scheduler: {
-      name: AdapterNames.SchedulerService,
-      database: {
-        driver: process.env.DATABASE_DRIVER,
-        host: process.env.DATABASE_HOST,
-        port: parseInt(process.env.DATABASE_PORT_SCHEDULER, 10),
-        name: process.env.DATABASE_NAME_SCHEDULER,
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
+    auth: {
+      web: {
+        port: parseInt(process.env.AUTH_PORT, 10),
       },
-      rabbitmq: {
-        url: `amqp://${process.env.RABBITMQ_USERNAME}:${
-          process.env.RABBITMQ_PASSWORD
-        }@${process.env.RABBITMQ_HOST}:${parseInt(
-          process.env.RABBITMQ_PORT,
-          10,
-        )}`,
-        host: process.env.RABBITMQ_HOST,
-        port: parseInt(process.env.RABBITMQ_PORT, 10),
-        queue: process.env.RABBITMQ_QUEUE_SCHEDULER,
-        username: process.env.RABBITMQ_USERNAME,
-        password: process.env.RABBITMQ_PASSWORD,
-        queueOptions: {
-          durable: true,
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportAuthAdapterService,
+          url: `amqp://${process.env.AUTH_RABBITMQ_USERNAME}:${
+            process.env.AUTH_RABBITMQ_PASSWORD
+          }@${process.env.AUTH_RABBITMQ_HOST}:${parseInt(
+            process.env.AUTH_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.AUTH_RABBITMQ_HOST,
+          port: parseInt(process.env.AUTH_RABBITMQ_PORT, 10),
+          queue: process.env.AUTH_RABBITMQ_QUEUE,
+          username: process.env.AUTH_RABBITMQ_USERNAME,
+          password: process.env.AUTH_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
         },
-        noAck: false,
+      },
+      database: {
+        postgres: {
+          driver: process.env.AUTH_DATABASE_DRIVER,
+          host: process.env.AUTH_DATABASE_HOST,
+          port: parseInt(process.env.AUTH_DATABASE_PORT, 10),
+          name: process.env.AUTH_DATABASE_NAME,
+          username: process.env.AUTH_DATABASE_USERNAME,
+          password: process.env.AUTH_DATABASE_PASSWORD,
+        },
+      },
+    },
+    billing: {
+      web: {
+        port: parseInt(process.env.BILLING_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportBillingAdapterService,
+          url: `amqp://${process.env.BILLING_RABBITMQ_USERNAME}:${
+            process.env.BILLING_RABBITMQ_PASSWORD
+          }@${process.env.BILLING_RABBITMQ_HOST}:${parseInt(
+            process.env.BILLING_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.BILLING_RABBITMQ_HOST,
+          port: parseInt(process.env.BILLING_RABBITMQ_PORT, 10),
+          queue: process.env.BILLING_RABBITMQ_QUEUE,
+          username: process.env.BILLING_RABBITMQ_USERNAME,
+          password: process.env.BILLING_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
+        },
+      },
+      database: {
+        postgres: {
+          driver: process.env.BILLING_DATABASE_DRIVER,
+          host: process.env.BILLING_DATABASE_HOST,
+          port: parseInt(process.env.BILLING_DATABASE_PORT, 10),
+          name: process.env.BILLING_DATABASE_NAME,
+          username: process.env.BILLING_DATABASE_USERNAME,
+          password: process.env.BILLING_DATABASE_PASSWORD,
+        },
       },
     },
     processor: {
-      name: AdapterNames.ProcessorService,
-      redis: {
-        host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT, 10),
+      web: {
+        port: parseInt(process.env.PROCESSOR_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportProcessorAdapterService,
+          url: `amqp://${process.env.PROCESSOR_RABBITMQ_USERNAME}:${
+            process.env.PROCESSOR_RABBITMQ_PASSWORD
+          }@${process.env.PROCESSOR_RABBITMQ_HOST}:${parseInt(
+            process.env.PROCESSOR_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.PROCESSOR_RABBITMQ_HOST,
+          port: parseInt(process.env.PROCESSOR_RABBITMQ_PORT, 10),
+          queue: process.env.PROCESSOR_RABBITMQ_QUEUE,
+          username: process.env.PROCESSOR_RABBITMQ_USERNAME,
+          password: process.env.PROCESSOR_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
+        },
       },
       database: {
-        driver: process.env.DATABASE_DRIVER,
-        host: process.env.DATABASE_HOST,
-        port: parseInt(process.env.DATABASE_PORT_PROCESSOR, 10),
-        name: process.env.DATABASE_NAME_PROCESSOR,
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
-      },
-      rabbitmq: {
-        url: `amqp://${process.env.RABBITMQ_USERNAME}:${
-          process.env.RABBITMQ_PASSWORD
-        }@${process.env.RABBITMQ_HOST}:${parseInt(
-          process.env.RABBITMQ_PORT,
-          10,
-        )}`,
-        host: process.env.RABBITMQ_HOST,
-        port: parseInt(process.env.RABBITMQ_PORT, 10),
-        queue: process.env.RABBITMQ_QUEUE_PROCESSOR,
-        username: process.env.RABBITMQ_USERNAME,
-        password: process.env.RABBITMQ_PASSWORD,
-        queueOptions: {
-          durable: true,
+        postgres: {
+          driver: process.env.PROCESSOR_DATABASE_DRIVER,
+          host: process.env.PROCESSOR_DATABASE_HOST,
+          port: parseInt(process.env.PROCESSOR_DATABASE_PORT, 10),
+          name: process.env.PROCESSOR_DATABASE_NAME,
+          username: process.env.PROCESSOR_DATABASE_USERNAME,
+          password: process.env.PROCESSOR_DATABASE_PASSWORD,
         },
-        noAck: false,
+      },
+    },
+    scheduler: {
+      web: {
+        port: parseInt(process.env.SCHEDULER_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportSchedulerAdapterService,
+          url: `amqp://${process.env.SCHEDULER_RABBITMQ_USERNAME}:${
+            process.env.SCHEDULER_RABBITMQ_PASSWORD
+          }@${process.env.SCHEDULER_RABBITMQ_HOST}:${parseInt(
+            process.env.SCHEDULER_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.SCHEDULER_RABBITMQ_HOST,
+          port: parseInt(process.env.SCHEDULER_RABBITMQ_PORT, 10),
+          queue: process.env.SCHEDULER_RABBITMQ_QUEUE,
+          username: process.env.SCHEDULER_RABBITMQ_USERNAME,
+          password: process.env.SCHEDULER_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
+        },
+      },
+      database: {
+        postgres: {
+          driver: process.env.SCHEDULER_DATABASE_DRIVER,
+          host: process.env.SCHEDULER_DATABASE_HOST,
+          port: parseInt(process.env.SCHEDULER_DATABASE_PORT, 10),
+          name: process.env.SCHEDULER_DATABASE_NAME,
+          username: process.env.SCHEDULER_DATABASE_USERNAME,
+          password: process.env.SCHEDULER_DATABASE_PASSWORD,
+        },
       },
     },
   },

@@ -4,8 +4,14 @@ import configuration from 'libs/config/configuration';
 const {
   services: {
     gateway: {
-      name,
-      rabbitmq: { url, queue, queueOptions },
+      transport: {
+        rabbitmq: {
+          name,
+          url,
+          queueOptions,
+          gateways: { processor },
+        },
+      },
     },
   },
 } = configuration();
@@ -18,7 +24,7 @@ export const adapters = [
         transport: Transport.RMQ,
         options: {
           urls: [url],
-          queue: queue,
+          queue: processor,
           queueOptions,
           noAck: true,
         },

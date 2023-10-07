@@ -7,19 +7,19 @@ import {
 } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
-import { AdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import {
   ScheduleCreatedDomainEvent,
   ScheduleType,
 } from '../../domain/entities/schedule.entity';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { ScheduleIntegrationEvents } from 'libs/events/schedule.events';
+import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 
 @Injectable()
 export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
   constructor(
     protected readonly logger: Logger,
-    @Inject(AdapterNames.ProcessorService)
+    @Inject(TransportAdapterNames.TransportProcessorAdapterService)
     protected service: ClientProxy,
     protected readonly schedulerRegistry: SchedulerRegistry,
   ) {}
