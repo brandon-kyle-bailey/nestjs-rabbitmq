@@ -2,8 +2,8 @@ import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SchedulerModule } from './infrastructure/adapters/scheduler/scheduler.module';
-import { CreateOperationController } from './interface/controllers/create-operation.http.controller';
-import { CreateOperationService } from './core/application/services/create-operation.service';
+import { CreateOperationController } from './interface/controllers/operation/create-operation.http.controller';
+import { CreateOperationService } from './core/application/services/operation/create-operation.service';
 import { RequestContextModule } from 'nestjs-request-context';
 import { DatabaseModule } from './infrastructure/adapters/database/database.module';
 import configuration from 'libs/config/configuration';
@@ -12,30 +12,41 @@ import { OperationRepositoryEntity } from './core/application/ports/operation/op
 import { OperationRepository } from './core/application/ports/operation/operation.repository';
 import { OperationMapper } from './infrastructure/mappers/operation.mapper';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ScheduleOperationService } from './core/application/services/schedule-operation.service';
-import { DeleteOperationController } from './interface/controllers/delete-operation.http.controller';
-import { DeleteOperationService } from './core/application/services/delete-operation.service';
-import { UnscheduleOperationService } from './core/application/services/unschedule-operation.service';
-import { GetOperationEventController } from './interface/controllers/get-operation.event.controller';
-import { GetOperationService } from './core/application/services/get-operation.service';
-import { GetOperationController } from './interface/controllers/get-operation.http.controller';
-import { UpdateOperationController } from './interface/controllers/update-operation.http.controller';
-import { UpdateOperationService } from './core/application/services/update-operation.service';
-import { ListOperationsController } from './interface/controllers/list-operations.http.controller';
-import { ListOperationsService } from './core/application/services/list-operations.service';
+import { ScheduleOperationService } from './core/application/services/operation/schedule-operation.service';
+import { DeleteOperationController } from './interface/controllers/operation/delete-operation.http.controller';
+import { DeleteOperationService } from './core/application/services/operation/delete-operation.service';
+import { UnscheduleOperationService } from './core/application/services/operation/unschedule-operation.service';
+import { GetOperationEventController } from './interface/controllers/operation/get-operation.event.controller';
+import { GetOperationService } from './core/application/services/operation/get-operation.service';
+import { GetOperationController } from './interface/controllers/operation/get-operation.http.controller';
+import { UpdateOperationController } from './interface/controllers/operation/update-operation.http.controller';
+import { UpdateOperationService } from './core/application/services/operation/update-operation.service';
+import { ListOperationsController } from './interface/controllers/operation/list-operations.http.controller';
+import { ListOperationsService } from './core/application/services/operation/list-operations.service';
 import { AuthModule } from './infrastructure/adapters/auth/auth.module';
-import { PauseOperationController } from './interface/controllers/pause-operation.http.controller';
-import { PauseOperationService } from './core/application/services/pause-operation.service';
-import { ResumeOperationService } from './core/application/services/resume-operation.service';
-import { ResumeOperationController } from './interface/controllers/resume-operation.http.controller';
-import { UpdateOperationIntervalController } from './interface/controllers/update-operation-interval.http.controller';
-import { UpdateOperationIntervalService } from './core/application/services/update-operation-interval.service';
+import { PauseOperationController } from './interface/controllers/operation/pause-operation.http.controller';
+import { PauseOperationService } from './core/application/services/operation/pause-operation.service';
+import { ResumeOperationService } from './core/application/services/operation/resume-operation.service';
+import { ResumeOperationController } from './interface/controllers/operation/resume-operation.http.controller';
+import { UpdateOperationIntervalController } from './interface/controllers/operation/update-operation-interval.http.controller';
+import { UpdateOperationIntervalService } from './core/application/services/operation/update-operation-interval.service';
+import { UserRepositoryEntity } from './core/application/ports/user/user.entity';
+import { UserRepository } from './core/application/ports/user/user.repository';
+import { UserMapper } from './infrastructure/mappers/user.mapper';
+import { GetUserController } from './interface/controllers/user/get-user.http.controller';
+import { UpdateUserController } from './interface/controllers/user/update-user.http.controller';
+import { CreateUserController } from './interface/controllers/user/create-user.http.controller';
+import { DeleteUserController } from './interface/controllers/user/delete-user.http.controller';
+import { CreateUserService } from './core/application/services/user/create-user.service';
+import { DeleteUserService } from './core/application/services/user/delete-user.service';
+import { GetUserService } from './core/application/services/user/get-user.service';
+import { UpdateUserService } from './core/application/services/user/update-user.service';
 
-const entities = [OperationRepositoryEntity];
+const entities = [OperationRepositoryEntity, UserRepositoryEntity];
 
-const repositories = [OperationRepository];
+const repositories = [OperationRepository, UserRepository];
 
-const mappers = [OperationMapper];
+const mappers = [OperationMapper, UserMapper];
 
 const services = [
   CreateOperationService,
@@ -48,6 +59,10 @@ const services = [
   PauseOperationService,
   ResumeOperationService,
   UpdateOperationIntervalService,
+  CreateUserService,
+  UpdateUserService,
+  GetUserService,
+  DeleteUserService,
 ];
 
 const controllers = [
@@ -60,6 +75,10 @@ const controllers = [
   PauseOperationController,
   ResumeOperationController,
   UpdateOperationIntervalController,
+  GetUserController,
+  UpdateUserController,
+  CreateUserController,
+  DeleteUserController,
 ];
 
 @Module({
