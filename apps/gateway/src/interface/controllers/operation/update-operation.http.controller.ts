@@ -1,9 +1,10 @@
-import { Body, Controller, Logger, Put } from '@nestjs/common';
+import { Body, Controller, Logger, Put, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { OperationResponseDto } from '../../dtos/operation/operation.response.dto';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
 import { UpdateOperationRequestDto } from '../../dtos/operation/update-operation.request.dto';
 import { UpdateOperationCommand } from '../../commands/operation/update-operation.command';
+import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 
 @Controller('v1')
 export class UpdateOperationController {
@@ -13,6 +14,7 @@ export class UpdateOperationController {
     protected readonly operationMapper: OperationMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Put('operation')
   async update(
     @Body() body: UpdateOperationRequestDto,

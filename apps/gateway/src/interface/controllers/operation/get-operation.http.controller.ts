@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Logger } from '@nestjs/common';
+import { Body, Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
 import { OperationResponseDto } from '../../dtos/operation/operation.response.dto';
 import { GetOperationQuery } from '../../queries/operation/get-operation.query';
 import { GetOperationRequestDto } from '../../dtos/operation/get-operation.request.dto';
+import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 
 @Controller('v1')
 export class GetOperationController {
@@ -13,6 +14,7 @@ export class GetOperationController {
     protected readonly mapper: OperationMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('operation')
   async get(
     @Body() body: GetOperationRequestDto,

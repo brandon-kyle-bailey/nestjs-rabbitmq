@@ -7,11 +7,13 @@ export class UserCreatedDomainEvent extends DomainEvent {
   readonly name: string;
   readonly email: string;
   readonly password: string;
+  readonly access_token?: string;
   constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
     super(props);
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
+    this.access_token = props.access_token;
   }
 }
 
@@ -32,6 +34,7 @@ export interface UserProps {
   name: string;
   email: string;
   password: string;
+  access_token?: string;
 }
 
 // Properties that are needed for a User creation
@@ -39,6 +42,7 @@ export interface CreateUserProps {
   name: string;
   email: string;
   password: string;
+  access_token?: string;
 }
 
 export interface UpdateUserProps extends Partial<CreateUserProps> {}

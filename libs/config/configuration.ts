@@ -46,6 +46,7 @@ export default () => ({
     auth: {
       web: {
         port: parseInt(process.env.AUTH_PORT, 10),
+        secret: 'hawkstatus',
       },
       transport: {
         rabbitmq: {

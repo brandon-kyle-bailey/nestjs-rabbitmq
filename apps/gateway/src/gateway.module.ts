@@ -41,6 +41,9 @@ import { CreateUserService } from './core/application/services/user/create-user.
 import { DeleteUserService } from './core/application/services/user/delete-user.service';
 import { GetUserService } from './core/application/services/user/get-user.service';
 import { UpdateUserService } from './core/application/services/user/update-user.service';
+import { SigninUserController } from './interface/controllers/user/sign-in-user.http.controller';
+import { SigninUserService } from './core/application/services/user/signin-user.service';
+import { AuthGuard } from './core/application/services/auth/auth.guard';
 
 const entities = [OperationRepositoryEntity, UserRepositoryEntity];
 
@@ -63,6 +66,7 @@ const services = [
   UpdateUserService,
   GetUserService,
   DeleteUserService,
+  SigninUserService,
 ];
 
 const controllers = [
@@ -79,7 +83,10 @@ const controllers = [
   UpdateUserController,
   CreateUserController,
   DeleteUserController,
+  SigninUserController,
 ];
+
+const guards = [AuthGuard];
 
 @Module({
   imports: [
@@ -96,6 +103,13 @@ const controllers = [
     EventEmitterModule.forRoot({ global: true }),
   ],
   controllers,
-  providers: [Logger, ConfigService, ...repositories, ...mappers, ...services],
+  providers: [
+    Logger,
+    ConfigService,
+    ...repositories,
+    ...mappers,
+    ...services,
+    ...guards,
+  ],
 })
 export class GatewayModule {}

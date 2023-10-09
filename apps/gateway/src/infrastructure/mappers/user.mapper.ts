@@ -42,6 +42,7 @@ export class UserMapper
     const response = new UserResponseDto(entity);
     response.name = props.name;
     response.email = props.email;
+    if (props.access_token) response.access_token = props.access_token;
     return response;
   }
 }

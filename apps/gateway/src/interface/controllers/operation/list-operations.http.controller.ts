@@ -1,10 +1,11 @@
-import { Controller, Get, Logger, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
 import { PaginatedQueryRequestDto } from 'libs/dto/paginated-query.request.dto';
 import { ListOperationsQuery } from '../../queries/operation/list-operations.query';
 import { OperationPaginatedResponseDto } from '../../dtos/operation/operation.paginated.response.dto';
 import { OperationEntity } from '../../../core/domain/entities/operation.entity';
+import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 @Controller('v1')
 export class ListOperationsController {
   constructor(
@@ -13,6 +14,7 @@ export class ListOperationsController {
     protected readonly mapper: OperationMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('operation/all')
   async list(
     @Query() queryParams: PaginatedQueryRequestDto,

@@ -1,9 +1,10 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOperationRequestDto } from '../../dtos/operation/create-operation.request.dto';
 import { CreateOperationCommand } from '../../commands/operation/create-operation.command';
 import { OperationResponseDto } from '../../dtos/operation/operation.response.dto';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
+import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 
 @Controller('v1')
 export class CreateOperationController {
@@ -13,6 +14,7 @@ export class CreateOperationController {
     protected readonly operationMapper: OperationMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post('operation')
   async create(
     @Body() body: CreateOperationRequestDto,

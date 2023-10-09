@@ -1,9 +1,9 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateOperationCommand } from 'apps/gateway/src/interface/commands/create-operation.command';
 import { OperationEntity } from '../../../domain/entities/operation.entity';
 import { OperationRepositoryPort } from '../../ports/operation/operation.repository.port';
 import { OperationRepository } from '../../ports/operation/operation.repository';
+import { CreateOperationCommand } from 'apps/gateway/src/interface/commands/operation/create-operation.command';
 
 @CommandHandler(CreateOperationCommand)
 export class CreateOperationService implements ICommandHandler {

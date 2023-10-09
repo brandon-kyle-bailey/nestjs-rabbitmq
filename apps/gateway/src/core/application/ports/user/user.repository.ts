@@ -6,6 +6,7 @@ import { UserRepositoryEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserEntity } from '../../../domain/entities/user.entity';
+import { UserMapper } from 'apps/gateway/src/infrastructure/mappers/user.mapper';
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -16,6 +17,11 @@ export class UserRepository implements UserRepositoryPort {
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+  async findOneByEmail(email: string): Promise<UserEntity> {
+    const result = await this.repo.findOneBy({ email });
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
   async save(entity: UserEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
