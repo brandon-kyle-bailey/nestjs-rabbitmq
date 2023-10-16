@@ -44,14 +44,33 @@ import { UpdateUserService } from './core/application/services/user/update-user.
 import { SigninUserController } from './interface/controllers/user/sign-in-user.http.controller';
 import { SigninUserService } from './core/application/services/user/signin-user.service';
 import { AuthGuard } from './core/application/services/auth/auth.guard';
+import { WorkspaceRepositoryEntity } from './core/application/ports/workspace/workspace.entity';
+import { WorkspaceRepository } from './core/application/ports/workspace/workspace.repository';
+import { WorkspaceMapper } from './infrastructure/mappers/workspace.mapper';
+import { CreateWorkspaceService } from './core/application/services/workspace/create-workspace.service';
+import { DeleteWorkspaceService } from './core/application/services/workspace/delete-workspace.service';
+import { ListWorkspacesService } from './core/application/services/workspace/list-workspaces.service';
+import { UpdateWorkspaceService } from './core/application/services/workspace/update-workspace.service';
+import { CreateWorkspaceController } from './interface/controllers/workspace/create-workspace.http.controller';
+import { DeleteWorkspaceController } from './interface/controllers/workspace/delete-workspace.http.controller';
+import { GetWorkspaceController } from './interface/controllers/workspace/get-workspace.http.controller';
+import { ListWorkspacesController } from './interface/controllers/workspace/list-workspaces.http.controller';
 
-const entities = [OperationRepositoryEntity, UserRepositoryEntity];
+const entities = [
+  OperationRepositoryEntity,
+  UserRepositoryEntity,
+  WorkspaceRepositoryEntity,
+];
 
-const repositories = [OperationRepository, UserRepository];
+const repositories = [OperationRepository, UserRepository, WorkspaceRepository];
 
-const mappers = [OperationMapper, UserMapper];
+const mappers = [OperationMapper, UserMapper, WorkspaceMapper];
 
 const services = [
+  CreateWorkspaceService,
+  UpdateWorkspaceService,
+  ListWorkspacesService,
+  DeleteWorkspaceService,
   CreateOperationService,
   GetOperationService,
   DeleteOperationService,
@@ -70,6 +89,10 @@ const services = [
 ];
 
 const controllers = [
+  CreateWorkspaceController,
+  GetWorkspaceController,
+  ListWorkspacesController,
+  DeleteWorkspaceController,
   GetOperationController,
   CreateOperationController,
   DeleteOperationController,

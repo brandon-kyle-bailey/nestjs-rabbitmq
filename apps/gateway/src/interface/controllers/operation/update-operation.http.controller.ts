@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Logger, Put, Req, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { OperationResponseDto } from '../../dtos/operation/operation.response.dto';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
@@ -18,6 +18,7 @@ export class UpdateOperationController {
   @Put('operation')
   async update(
     @Body() body: UpdateOperationRequestDto,
+    @Req() request: any,
   ): Promise<OperationResponseDto> {
     try {
       const command = UpdateOperationCommand.create(body);

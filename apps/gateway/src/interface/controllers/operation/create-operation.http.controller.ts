@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Req, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOperationRequestDto } from '../../dtos/operation/create-operation.request.dto';
 import { CreateOperationCommand } from '../../commands/operation/create-operation.command';
@@ -18,6 +18,7 @@ export class CreateOperationController {
   @Post('operation')
   async create(
     @Body() body: CreateOperationRequestDto,
+    @Req() request: any,
   ): Promise<OperationResponseDto> {
     try {
       const command = CreateOperationCommand.create(body);

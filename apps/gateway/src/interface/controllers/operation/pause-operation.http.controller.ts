@@ -4,6 +4,7 @@ import {
   Delete,
   Logger,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -21,7 +22,10 @@ export class PauseOperationController {
 
   @UseGuards(AuthGuard)
   @Post('operation/pause')
-  async pause(@Body() body: PauseOperationRequestDto): Promise<AggregateID> {
+  async pause(
+    @Body() body: PauseOperationRequestDto,
+    @Req() request: any,
+  ): Promise<AggregateID> {
     try {
       const command = PauseOperationCommand.create(body);
       const result = await this.commandBus.execute(command);

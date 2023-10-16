@@ -3,6 +3,7 @@ import configuration from 'libs/config/configuration';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { OperationRepositoryEntity } from 'apps/gateway/src/core/application/ports/operation/operation.entity';
 import { UserRepositoryEntity } from 'apps/gateway/src/core/application/ports/user/user.entity';
+import { WorkspaceRepositoryEntity } from 'apps/gateway/src/core/application/ports/workspace/workspace.entity';
 
 const {
   services: {
@@ -22,7 +23,11 @@ export const databaseConfiguration = {
   username,
   password,
   database,
-  entities: [OperationRepositoryEntity, UserRepositoryEntity],
+  entities: [
+    OperationRepositoryEntity,
+    UserRepositoryEntity,
+    WorkspaceRepositoryEntity,
+  ],
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
 };
 

@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import * as bcrypt from 'bcrypt';
 import { AggregateRoot } from 'libs/ddd/aggregate-root.base';
 import { AggregateID } from 'libs/ddd/entity.base';
 import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
@@ -38,12 +39,7 @@ export interface UserProps {
 }
 
 // Properties that are needed for a User creation
-export interface CreateUserProps {
-  name: string;
-  email: string;
-  password: string;
-  access_token?: string;
-}
+export interface CreateUserProps extends UserProps {}
 
 export interface UpdateUserProps extends Partial<CreateUserProps> {}
 
@@ -52,17 +48,18 @@ export class UserEntity extends AggregateRoot<UserProps> {
 
   static create(props: CreateUserProps, entityId?: string): UserEntity {
     const id = entityId || v4();
-    const User = new UserEntity({ id, props });
+    const password = bcrypt.hashSync(props.password, 10);
+    const user = new UserEntity({ id, props: { ...props, password } });
     /* adding "UserCreated" Domain Event that will be published
     eventually so an event handler somewhere may receive it and do an
     appropriate action. Multiple events can be added if needed. */
-    User.addEvent(
+    user.addEvent(
       new UserCreatedDomainEvent({
         aggregateId: id,
-        ...User.getProps(),
+        ...user.getProps(),
       }),
     );
-    return User;
+    return user;
   }
 
   /* You can create getters only for the properties that you need to
@@ -77,6 +74,10 @@ export class UserEntity extends AggregateRoot<UserProps> {
         aggregateId: this.id,
       }),
     );
+  }
+
+  verifyPasswordHash(password: string): boolean {
+    return bcrypt.compareSync(password, this.props.password);
   }
 
   /* Update method only changes properties that we allow, in this

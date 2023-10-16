@@ -1,27 +1,27 @@
 import { Body, Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
-import { OperationResponseDto } from '../../dtos/operation/operation.response.dto';
-import { GetOperationQuery } from '../../queries/operation/get-operation.query';
-import { GetOperationRequestDto } from '../../dtos/operation/get-operation.request.dto';
+import { WorkspaceMapper } from 'apps/gateway/src/infrastructure/mappers/workspace.mapper';
+import { GetWorkspaceRequestDto } from '../../dtos/workspace/get-workspace.request.dto';
+import { WorkspaceResponseDto } from '../../dtos/workspace/workspace.response.dto';
+import { GetWorkspaceQuery } from '../../queries/workspace/get-workspace.query';
 import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 
 @Controller('v1')
-export class GetOperationController {
+export class GetWorkspaceController {
   constructor(
     protected readonly logger: Logger,
     protected readonly queryBus: QueryBus,
-    protected readonly mapper: OperationMapper,
+    protected readonly mapper: WorkspaceMapper,
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('operation')
+  @Get('workspace')
   async get(
-    @Body() body: GetOperationRequestDto,
+    @Body() body: GetWorkspaceRequestDto,
     @Req() request: any,
-  ): Promise<OperationResponseDto> {
+  ): Promise<WorkspaceResponseDto> {
     try {
-      const query = GetOperationQuery.create({
+      const query = GetWorkspaceQuery.create({
         id: body.id,
       });
       const result = await this.queryBus.execute(query);
@@ -29,7 +29,7 @@ export class GetOperationController {
       return response;
     } catch (error) {
       this.logger.error(
-        'GetOperationController.get encountered an error',
+        'GetWorkspaceController.get encountered an error',
         error,
       );
     }

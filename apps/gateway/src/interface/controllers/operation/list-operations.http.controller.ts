@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Query, Req, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { OperationMapper } from '../../../infrastructure/mappers/operation.mapper';
 import { PaginatedQueryRequestDto } from 'libs/dto/paginated-query.request.dto';
@@ -18,6 +18,7 @@ export class ListOperationsController {
   @Get('operation/all')
   async list(
     @Query() queryParams: PaginatedQueryRequestDto,
+    @Req() request: any,
   ): Promise<OperationPaginatedResponseDto> {
     try {
       const query = ListOperationsQuery.create({

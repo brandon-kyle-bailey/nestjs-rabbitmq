@@ -1,9 +1,10 @@
-import { Body, Controller, Logger, Put } from '@nestjs/common';
+import { Body, Controller, Logger, Put, Req, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { UserMapper } from 'apps/gateway/src/infrastructure/mappers/user.mapper';
 import { UpdateUserCommand } from '../../commands/user/update-user.command';
 import { UpdateUserRequestDto } from '../../dtos/user/update-user.request.dto';
 import { UserResponseDto } from '../../dtos/user/user.response.dto';
+import { AuthGuard } from 'apps/gateway/src/core/application/services/auth/auth.guard';
 
 @Controller('v1')
 export class UpdateUserController {
@@ -13,8 +14,12 @@ export class UpdateUserController {
     protected readonly mapper: UserMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Put('user')
-  async update(@Body() body: UpdateUserRequestDto): Promise<UserResponseDto> {
+  async update(
+    @Body() body: UpdateUserRequestDto,
+    @Req() request: any,
+  ): Promise<UserResponseDto> {
     try {
       const command = UpdateUserCommand.create(body);
       const result = await this.commandBus.execute(command);

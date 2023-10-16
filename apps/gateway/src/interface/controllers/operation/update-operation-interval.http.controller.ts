@@ -4,6 +4,7 @@ import {
   Delete,
   Logger,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -23,6 +24,7 @@ export class UpdateOperationIntervalController {
   @Post('operation/interval/update')
   async pause(
     @Body() body: UpdateOperationIntervalRequestDto,
+    @Req() request: any,
   ): Promise<AggregateID> {
     try {
       const command = UpdateOperationIntervalCommand.create(body);

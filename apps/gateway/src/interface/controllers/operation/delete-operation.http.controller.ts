@@ -1,4 +1,11 @@
-import { Body, Controller, Delete, Logger, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Logger,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AggregateID } from 'libs/ddd/entity.base';
 import { DeleteOperationRequestDto } from '../../dtos/operation/delete-operation.request.dto';
@@ -14,7 +21,10 @@ export class DeleteOperationController {
 
   @UseGuards(AuthGuard)
   @Delete('operation')
-  async delete(@Body() body: DeleteOperationRequestDto): Promise<AggregateID> {
+  async delete(
+    @Body() body: DeleteOperationRequestDto,
+    @Req() request: any,
+  ): Promise<AggregateID> {
     try {
       const command = DeleteOperationCommand.create(body);
       const result = await this.commandBus.execute(command);

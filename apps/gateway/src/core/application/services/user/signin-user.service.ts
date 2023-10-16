@@ -47,7 +47,7 @@ export class SigninUserService
       }
       this.logger.debug('found user', user);
       const { id, name, email, password } = user.getProps();
-      if (password !== command.password) {
+      if (!user.verifyPasswordHash(command.password)) {
         this.logger.debug('credentials invalid');
         throw new UnauthorizedException('credentials invalid');
       }

@@ -17,7 +17,6 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class AuthGuard implements CanActivate, OnModuleInit, OnModuleDestroy {
   constructor(
-    private readonly logger: Logger,
     @Inject(TransportAdapterNames.TransportAuthAdapterService)
     private readonly service: ClientProxy,
   ) {}
@@ -30,11 +29,8 @@ export class AuthGuard implements CanActivate, OnModuleInit, OnModuleDestroy {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    this.logger.debug('AuthGuad.canActivate called with', context);
     const request = context.switchToHttp().getRequest();
-    this.logger.debug('request', request);
     const token = this.extractTokenFromHeader(request);
-    this.logger.debug('token', token);
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -44,10 +40,9 @@ export class AuthGuard implements CanActivate, OnModuleInit, OnModuleDestroy {
           access_token: token,
         }),
       );
-      this.logger.debug('payload', payload);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
+      request.user = payload;
     } catch {
       throw new UnauthorizedException();
     }
