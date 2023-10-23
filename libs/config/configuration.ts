@@ -82,6 +82,8 @@ export default () => ({
     billing: {
       web: {
         port: parseInt(process.env.BILLING_PORT, 10),
+        stripe_token: process.env.BILLING_STRIPE_SECRET_KEY,
+        stripe_webhook_token: process.env.BILLING_STRIPE_WEBHOOK_SECRET_KEY,
       },
       transport: {
         rabbitmq: {

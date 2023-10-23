@@ -55,6 +55,10 @@ import { CreateWorkspaceController } from './interface/controllers/workspace/cre
 import { DeleteWorkspaceController } from './interface/controllers/workspace/delete-workspace.http.controller';
 import { GetWorkspaceController } from './interface/controllers/workspace/get-workspace.http.controller';
 import { ListWorkspacesController } from './interface/controllers/workspace/list-workspaces.http.controller';
+import { BillingModule } from './infrastructure/adapters/billing/billing.module';
+import { PaymentIntentMapper } from './infrastructure/mappers/payment-intent.mapper';
+import { CreatePaymentIntentService } from './core/application/services/billing/create-payment-intent.service';
+import { CreatePaymentIntentController } from './interface/controllers/billing/create-payment-intent.http.controller';
 
 const entities = [
   OperationRepositoryEntity,
@@ -64,9 +68,15 @@ const entities = [
 
 const repositories = [OperationRepository, UserRepository, WorkspaceRepository];
 
-const mappers = [OperationMapper, UserMapper, WorkspaceMapper];
+const mappers = [
+  OperationMapper,
+  UserMapper,
+  WorkspaceMapper,
+  PaymentIntentMapper,
+];
 
 const services = [
+  CreatePaymentIntentService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
   ListWorkspacesService,
@@ -89,6 +99,7 @@ const services = [
 ];
 
 const controllers = [
+  CreatePaymentIntentController,
   CreateWorkspaceController,
   GetWorkspaceController,
   ListWorkspacesController,
@@ -121,6 +132,7 @@ const guards = [AuthGuard];
     DatabaseModule,
     SchedulerModule,
     AuthModule,
+    BillingModule,
     RequestContextModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),
