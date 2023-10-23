@@ -5,7 +5,11 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
-    "tsConfigPath": "apps/gateway/tsconfig.app.json"
+    "tsConfigPath": "apps/gateway/tsconfig.app.json",
+    "assets": [
+      "apps/notifications/src/infrastructure/adapters/smtp/templates/**/*"
+    ],
+    "watchAssets": true
   },
   "monorepo": true,
   "root": "apps/gateway",

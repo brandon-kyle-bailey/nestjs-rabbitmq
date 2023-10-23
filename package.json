@@ -14,6 +14,7 @@
     "start:processor:dev": "export NODE_ENV=development && nest start processor --watch",
     "start:auth:dev": "export NODE_ENV=development && nest start auth --watch",
     "start:billing:dev": "export NODE_ENV=development && nest start billing --watch",
+    "start:notifications:dev": "export NODE_ENV=development && nest start notifications --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/app/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -25,6 +26,7 @@
     "start:infrastructure": "docker compose up -d"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/cache-manager": "^2.1.0",
     "@nestjs/common": "^10.0.0",
@@ -46,7 +48,9 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.3.1",
+    "handlebars": "^4.7.8",
     "nestjs-request-context": "^3.0.0",
+    "nodemailer": "^6.9.7",
     "pg": "^8.11.3",
     "redis": "^4.6.10",
     "reflect-metadata": "^0.1.13",
@@ -63,6 +67,7 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
+    "@types/nodemailer": "^6.4.13",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

@@ -6,6 +6,7 @@ import { NotificationsModule } from './notifications.module';
 const {
   services: {
     notifications: {
+      web: { port },
       transport: {
         rabbitmq: { url, queue, queueOptions, noAck },
       },
@@ -14,20 +15,20 @@ const {
 } = configuration();
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    NotificationsModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [url],
-        queue,
-        queueOptions,
-        noAck,
-      },
+  const app = await NestFactory.create(NotificationsModule);
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [url],
+      queue,
+      queueOptions,
+      noAck,
     },
-  );
+  });
 
+  app.startAllMicroservices();
   app.enableShutdownHooks();
-  await app.listen();
+
+  await app.listen(port);
 }
 bootstrap();

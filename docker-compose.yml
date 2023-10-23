@@ -116,3 +116,34 @@ services:
     ports:
       - 5676:5672
       - 15676:15672
+  postgres-notifications:
+    image: postgres
+    container_name: postgres-notifications
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_DB=notifications
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
+    ports:
+      - 5437:5432
+  rabbitmq-notifications:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq-notifications
+    hostname: rabbitmq-notifications
+    environment:
+      - RABBITMQ_DEFAULT_USER=hawkstatus
+      - RABBITMQ_DEFAULT_PASS=hawkstatus
+    ports:
+      - 5677:5672
+      - 15677:15672
+  mailhog:
+    restart: always
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025
+      - 8025:8025
