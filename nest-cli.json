@@ -121,6 +121,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
+    },
+    "task-runner": {
+      "type": "application",
+      "root": "apps/task-runner",
+      "entryFile": "main",
+      "sourceRoot": "apps/task-runner/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/task-runner/tsconfig.app.json"
+      }
+    },
+    "schedule-orchestrator": {
+      "type": "application",
+      "root": "apps/schedule-orchestrator",
+      "entryFile": "main",
+      "sourceRoot": "apps/schedule-orchestrator/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/schedule-orchestrator/tsconfig.app.json"
+      }
     }
   }
 }
