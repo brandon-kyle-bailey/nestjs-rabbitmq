@@ -6,6 +6,7 @@ import { WorkspaceRepositoryEntity } from 'apps/gateway/src/core/application/por
 import { BillingPlanRepositoryEntity } from 'apps/gateway/src/core/application/ports/billing-plan/billing-plan.entity';
 import { RoleRepositoryEntity } from 'apps/gateway/src/core/application/ports/role/role.entity';
 import { WorkspaceMembershipRepositoryEntity } from 'apps/gateway/src/core/application/ports/workspace-membership/workspace-membership.entity';
+import { ScheduledTaskRepositoryEntity } from 'apps/gateway/src/core/application/ports/scheduled-task/scheduled-task.entity';
 
 const {
   services: {
@@ -30,6 +31,7 @@ export const databaseConfiguration: PostgresConnectionOptions = {
     BillingPlanRepositoryEntity,
     RoleRepositoryEntity,
     WorkspaceMembershipRepositoryEntity,
+    ScheduledTaskRepositoryEntity,
   ],
   migrations: [__dirname + '/./migrations/*'],
   migrationsRun: true,

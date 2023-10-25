@@ -26,7 +26,10 @@ export class WorkspaceRepository implements WorkspaceRepositoryPort {
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<WorkspaceEntity> {
-    const result = await this.repo.findOneBy({ id });
+    const result = await this.repo.findOne({
+      where: { id },
+      relations: { owner: true },
+    });
     if (!result) {
       return null;
     }

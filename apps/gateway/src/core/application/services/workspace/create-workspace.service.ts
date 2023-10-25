@@ -24,7 +24,7 @@ export class CreateWorkspaceService implements ICommandHandler {
   async execute(command: CreateWorkspaceCommand): Promise<WorkspaceEntity> {
     try {
       this.logger.debug('command', JSON.stringify(command));
-      const owner = await this.userRepo.findOneById(command.ownerID);
+      const owner = await this.userRepo.findOneById(command.ownerId);
       const workspace = WorkspaceEntity.create({
         name: command.name,
         owner,

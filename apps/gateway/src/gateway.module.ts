@@ -46,6 +46,20 @@ import { RefresUserTokenService } from './core/application/services/user/refresh
 import { WorkspaceMembershipRepository } from './core/application/ports/workspace-membership/workspace-membership.repository';
 import { WorkspaceMembershipMapper } from './infrastructure/mappers/workspace-membership.mapper';
 import { WorkspaceMembershipRepositoryEntity } from './core/application/ports/workspace-membership/workspace-membership.entity';
+import { ScheduledTaskRepositoryEntity } from './core/application/ports/scheduled-task/scheduled-task.entity';
+import { ScheduledTaskRepository } from './core/application/ports/scheduled-task/scheduled-task.repository';
+import { ScheduledTaskMapper } from './infrastructure/mappers/scheduled-task.mapper';
+import { GetWorkspaceService } from './core/application/services/workspace/get-workspace.service';
+import { CreateScheduledTaskService } from './core/application/services/scheduled-task/create-scheduled-task.service';
+import { DeleteScheduledTaskService } from './core/application/services/scheduled-task/delete-scheduled-task.service';
+import { GetScheduledTaskService } from './core/application/services/scheduled-task/get-scheduled-task.service';
+import { UpdateScheduledTaskService } from './core/application/services/scheduled-task/update-scheduled-task.service';
+import { UpdateWorkspaceController } from './interface/controllers/workspace/update-workspace.http.controller';
+import { CreateScheduledTaskController } from './interface/controllers/scheduled-task/create-scheduled-task.http.controller';
+import { DeleteScheduledTaskController } from './interface/controllers/scheduled-task/delete-scheduled-task.http.controller';
+import { GetScheduledTaskController } from './interface/controllers/scheduled-task/get-scheduled-task.http.controller';
+import { ListScheduledTaskController } from './interface/controllers/scheduled-task/list-scheduled-task.http.controller';
+import { UpdateScheduledTaskController } from './interface/controllers/scheduled-task/update-scheduled-task.http.controller';
 
 const entities = [
   UserRepositoryEntity,
@@ -53,6 +67,7 @@ const entities = [
   BillingPlanRepositoryEntity,
   RoleRepositoryEntity,
   WorkspaceMembershipRepositoryEntity,
+  ScheduledTaskRepositoryEntity,
 ];
 
 const repositories = [
@@ -61,6 +76,7 @@ const repositories = [
   RoleRepository,
   BillingPlanRepository,
   WorkspaceMembershipRepository,
+  ScheduledTaskRepository,
 ];
 
 const mappers = [
@@ -69,14 +85,20 @@ const mappers = [
   RoleMapper,
   BillingPlanMapper,
   WorkspaceMembershipMapper,
+  ScheduledTaskMapper,
 ];
 
 const services = [
-  RefresUserTokenService,
-  SendVerificationEmailService,
+  GetWorkspaceService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
   DeleteWorkspaceService,
+  GetScheduledTaskService,
+  CreateScheduledTaskService,
+  UpdateScheduledTaskService,
+  DeleteScheduledTaskService,
+  RefresUserTokenService,
+  SendVerificationEmailService,
   CreateUserService,
   UpdateUserService,
   GetUserService,
@@ -85,12 +107,18 @@ const services = [
 ];
 
 const controllers = [
+  CreateScheduledTaskController,
+  GetScheduledTaskController,
+  ListScheduledTaskController,
+  UpdateScheduledTaskController,
+  DeleteScheduledTaskController,
   RefreshUserTokenController,
   VeriyUserController,
   VerifyEmailEventController,
   CreateWorkspaceController,
   GetWorkspaceController,
   ListWorkspacesController,
+  UpdateWorkspaceController,
   DeleteWorkspaceController,
   GetUserController,
   UpdateUserController,

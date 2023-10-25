@@ -23,7 +23,7 @@ export class CreateWorkspaceController {
     try {
       const command = CreateWorkspaceCommand.create({
         ...body,
-        ownerID: request.user.sub,
+        ownerId: request.user.sub,
       });
       const result = await this.commandBus.execute(command);
       return this.mapper.toResponse(result);
