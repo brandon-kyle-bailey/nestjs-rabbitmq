@@ -1,145 +1,30 @@
 version: '3'
 
 services:
-  postgres-gateway:
+  postgres:
     image: postgres
-    container_name: postgres-gateway
+    container_name: postgres
     restart: always
     user: postgres
     environment:
-      - POSTGRES_DB=gateway
+      - POSTGRES_DB=hawkstatus
       - POSTGRES_USERNAME=hawkstatus
       - POSTGRES_USER=hawkstatus
       - POSTGRES_PASSWORD=hawkstatus
     ports:
       - 5432:5432
-  rabbitmq-gateway:
+  rabbitmq:
     restart: always
     image: rabbitmq:management
-    container_name: rabbitmq-gateway
-    hostname: rabbitmq-gateway
+    container_name: rabbitmq
+    hostname: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=hawkstatus
       - RABBITMQ_DEFAULT_PASS=hawkstatus
     ports:
       - 5672:5672
       - 15672:15672
-  postgres-auth:
-    image: postgres
-    container_name: postgres-auth
-    restart: always
-    user: postgres
-    environment:
-      - POSTGRES_DB=auth
-      - POSTGRES_USERNAME=hawkstatus
-      - POSTGRES_USER=hawkstatus
-      - POSTGRES_PASSWORD=hawkstatus
-    ports:
-      - 5433:5432
-  rabbitmq-auth:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq-auth
-    hostname: rabbitmq-auth
-    environment:
-      - RABBITMQ_DEFAULT_USER=hawkstatus
-      - RABBITMQ_DEFAULT_PASS=hawkstatus
-    ports:
-      - 5673:5672
-      - 15673:15672
-  postgres-billing:
-    image: postgres
-    container_name: postgres-billing
-    restart: always
-    user: postgres
-    environment:
-      - POSTGRES_DB=billing
-      - POSTGRES_USERNAME=hawkstatus
-      - POSTGRES_USER=hawkstatus
-      - POSTGRES_PASSWORD=hawkstatus
-    ports:
-      - 5434:5432
-  rabbitmq-billing:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq-billing
-    hostname: rabbitmq-billing
-    environment:
-      - RABBITMQ_DEFAULT_USER=hawkstatus
-      - RABBITMQ_DEFAULT_PASS=hawkstatus
-    ports:
-      - 5674:5672
-      - 15674:15672
-  postgres-processor:
-    image: postgres
-    container_name: postgres-processor
-    restart: always
-    user: postgres
-    environment:
-      - POSTGRES_DB=processor
-      - POSTGRES_USERNAME=hawkstatus
-      - POSTGRES_USER=hawkstatus
-      - POSTGRES_PASSWORD=hawkstatus
-    ports:
-      - 5435:5432
-  rabbitmq-processor:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq-processor
-    hostname: rabbitmq-processor
-    environment:
-      - RABBITMQ_DEFAULT_USER=hawkstatus
-      - RABBITMQ_DEFAULT_PASS=hawkstatus
-    ports:
-      - 5675:5672
-      - 15675:15672
-  postgres-scheduler:
-    image: postgres
-    container_name: postgres-scheduler
-    restart: always
-    user: postgres
-    environment:
-      - POSTGRES_DB=scheduler
-      - POSTGRES_USERNAME=hawkstatus
-      - POSTGRES_USER=hawkstatus
-      - POSTGRES_PASSWORD=hawkstatus
-    ports:
-      - 5436:5432
-  rabbitmq-scheduler:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq-scheduler
-    hostname: rabbitmq-scheduler
-    environment:
-      - RABBITMQ_DEFAULT_USER=hawkstatus
-      - RABBITMQ_DEFAULT_PASS=hawkstatus
-    ports:
-      - 5676:5672
-      - 15676:15672
-  postgres-notifications:
-    image: postgres
-    container_name: postgres-notifications
-    restart: always
-    user: postgres
-    environment:
-      - POSTGRES_DB=notifications
-      - POSTGRES_USERNAME=hawkstatus
-      - POSTGRES_USER=hawkstatus
-      - POSTGRES_PASSWORD=hawkstatus
-    ports:
-      - 5437:5432
-  rabbitmq-notifications:
-    restart: always
-    image: rabbitmq:management
-    container_name: rabbitmq-notifications
-    hostname: rabbitmq-notifications
-    environment:
-      - RABBITMQ_DEFAULT_USER=hawkstatus
-      - RABBITMQ_DEFAULT_PASS=hawkstatus
-    ports:
-      - 5677:5672
-      - 15677:15672
-  mailhog:
+  smtp:
     restart: always
     image: mailhog/mailhog
     logging:

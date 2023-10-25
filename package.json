@@ -9,11 +9,8 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:gateway:dev": "export NODE_ENV=development && nest start --watch",
-    "start:scheduler:dev": "export NODE_ENV=development && nest start scheduler --watch",
-    "start:processor:dev": "export NODE_ENV=development && nest start processor --watch",
     "start:auth:dev": "export NODE_ENV=development && nest start auth --watch",
-    "start:billing:dev": "export NODE_ENV=development && nest start billing --watch",
+    "start:gateway:dev": "export NODE_ENV=development && nest start --watch",
     "start:notifications:dev": "export NODE_ENV=development && nest start notifications --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/app/main",
@@ -23,7 +20,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/app/test/jest-e2e.json",
-    "start:infrastructure": "docker compose up -d"
+    "start:infrastructure": "docker compose up -d",
+    "create:microservice": "./scripts/scaffold-ddd-package.sh $1"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.9.1",
@@ -47,6 +45,7 @@
     "cache-manager-redis-store": "^3.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "concurrently": "^8.2.2",
     "dotenv": "^16.3.1",
     "handlebars": "^4.7.8",
     "nestjs-request-context": "^3.0.0",

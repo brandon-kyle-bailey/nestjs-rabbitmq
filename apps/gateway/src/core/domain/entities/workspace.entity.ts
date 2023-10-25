@@ -2,14 +2,15 @@ import { v4 } from 'uuid';
 import { AggregateRoot } from 'libs/ddd/aggregate-root.base';
 import { AggregateID } from 'libs/ddd/entity.base';
 import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
+import { UserEntity } from './user.entity';
 
 export class WorkspaceCreatedDomainEvent extends DomainEvent {
-  readonly ownerID: AggregateID;
   readonly name: string;
+  readonly owner: UserEntity;
   constructor(props: DomainEventProps<WorkspaceCreatedDomainEvent>) {
     super(props);
-    this.ownerID = props.ownerID;
     this.name = props.name;
+    this.owner = props.owner;
   }
 }
 
@@ -27,14 +28,14 @@ export class WorkspaceUpdatedDomainEvent extends DomainEvent {
 
 // All properties that an Workspace has
 export interface WorkspaceProps {
-  ownerID: AggregateID;
   name: string;
+  owner: UserEntity;
 }
 
 // Properties that are needed for a Workspace creation
 export interface CreateWorkspaceProps {
-  ownerID: AggregateID;
   name: string;
+  owner: UserEntity;
 }
 
 export interface UpdateWorkspaceProps {
@@ -72,16 +73,12 @@ export class WorkspaceEntity extends AggregateRoot<WorkspaceProps> {
     return this.props.name;
   }
 
-  get ownerID(): AggregateID {
-    return this.props.ownerID;
-  }
-
   private _setName(name: string): void {
     this.props.name = name;
   }
 
   isOwner(userID: string): boolean {
-    return userID === this.props.ownerID;
+    return userID === this.props.owner.id;
   }
 
   update(props: UpdateWorkspaceProps): void {

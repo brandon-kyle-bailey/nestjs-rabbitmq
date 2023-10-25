@@ -16,8 +16,8 @@ export class UpdateUserService implements ICommandHandler {
     try {
       let user: UserEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.id);
-        // user.update(command);
+        user = await this.repo.findOneById(command.userId);
+        user.update(command);
         this.repo.save(user);
       });
       return user;

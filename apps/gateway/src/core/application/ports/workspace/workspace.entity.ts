@@ -6,7 +6,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Column,
+  ManyToOne,
 } from 'typeorm';
+import { UserRepositoryEntity } from '../user/user.entity';
 
 export interface WorkspaceEntityProps {
   readonly ownerID: AggregateID;
@@ -33,6 +35,12 @@ export class WorkspaceRepositoryEntity {
   @Column({ length: 500 })
   name!: string;
 
+  @ManyToOne(
+    () => UserRepositoryEntity,
+    (user: UserRepositoryEntity) => user.id,
+  )
+  owner: UserRepositoryEntity;
+
   @Column('uuid')
-  ownerID!: string;
+  ownerId!: string;
 }

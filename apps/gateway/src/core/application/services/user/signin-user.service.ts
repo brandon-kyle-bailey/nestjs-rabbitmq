@@ -46,7 +46,10 @@ export class SigninUserService
         throw new NotFoundException('user not found');
       }
       this.logger.debug('found user', user);
-      const { id, name, email, password } = user.getProps();
+      const { id, name, email, password, role, verified } = user.getProps();
+      if (!verified) {
+        throw new UnauthorizedException('Email address has not been verified');
+      }
       if (!user.verifyPasswordHash(command.password)) {
         this.logger.debug('credentials invalid');
         throw new UnauthorizedException('credentials invalid');
@@ -56,14 +59,19 @@ export class SigninUserService
         name,
         email,
         password,
+        role: role.name,
       };
       this.logger.debug('payload', payload);
       const token = await firstValueFrom(
-        this.service.send(UserIntegrationEvents.CreatToken, payload),
+        this.service.send(UserIntegrationEvents.CreateToken, payload),
       );
       this.logger.debug('token', token);
       return UserEntity.create(
-        { ...user.getProps(), access_token: token.access_token },
+        {
+          ...user.getProps(),
+          access_token: token.access_token,
+          refresh_token: token.refresh_token,
+        },
         user.id,
       );
     } catch (error) {

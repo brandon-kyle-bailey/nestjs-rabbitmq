@@ -5,6 +5,7 @@ export class CreateUserTokenCommand extends Command {
   readonly name: string;
   readonly email: string;
   readonly password: string;
+  readonly role: string;
 
   private constructor(props: CommandProps<CreateUserTokenCommand>) {
     super(props);
@@ -12,6 +13,7 @@ export class CreateUserTokenCommand extends Command {
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
+    this.role = props.role;
   }
 
   static create(

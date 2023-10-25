@@ -7,14 +7,14 @@ const {
   services: {
     gateway: {
       transport: {
-        rabbitmq: {
-          url,
-          queueOptions,
-          noAck,
-          gateways: { processor, billing, auth },
-        },
+        rabbitmq: { url, queueOptions, noAck },
       },
       web: { port },
+    },
+    auth: {
+      transport: {
+        rabbitmq: { queue: authQueue },
+      },
     },
   },
 } = configuration();
@@ -26,31 +26,7 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: [url],
-        queue: processor,
-        queueOptions,
-        noAck,
-      },
-    },
-    { inheritAppConfig: true },
-  );
-  app.connectMicroservice<MicroserviceOptions>(
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [url],
-        queue: auth,
-        queueOptions,
-        noAck,
-      },
-    },
-    { inheritAppConfig: true },
-  );
-  app.connectMicroservice<MicroserviceOptions>(
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [url],
-        queue: billing,
+        queue: authQueue,
         queueOptions,
         noAck,
       },

@@ -1,7 +1,8 @@
 import { ResponseBase } from 'libs/dto/response.base';
 
 export class UserResponseDto extends ResponseBase {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   access_token?: string;
+  refresh_token?: string;
 }

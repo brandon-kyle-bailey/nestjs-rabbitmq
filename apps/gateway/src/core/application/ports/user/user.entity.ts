@@ -1,3 +1,4 @@
+import { AggregateID } from 'libs/ddd/entity.base';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,11 +6,18 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Column,
+  ManyToOne,
 } from 'typeorm';
+import { BillingPlanRepositoryEntity } from '../billing-plan/billing-plan.entity';
+import { RoleRepositoryEntity } from '../role/role.entity';
 
 export interface UserEntityProps {
+  readonly roleId: AggregateID;
+  readonly billingCustomerId: AggregateID;
+  readonly billingPlanId: AggregateID;
   readonly name: string;
   readonly email: string;
+  readonly verified: boolean;
   readonly password: string;
 }
 
@@ -20,6 +28,15 @@ export class UserRepositoryEntity {
   }
   @PrimaryGeneratedColumn('uuid')
   id!: string;
+
+  @Column('uuid')
+  roleId!: string;
+
+  @Column('uuid')
+  billingCustomerId!: string;
+
+  @Column('uuid')
+  billingPlanId!: string;
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -36,6 +53,21 @@ export class UserRepositoryEntity {
   @Column()
   email: string;
 
+  @Column({ default: false })
+  verified: boolean;
+
   @Column()
   password: string;
+
+  @ManyToOne(
+    () => BillingPlanRepositoryEntity,
+    (billingPlan: BillingPlanRepositoryEntity) => billingPlan.id,
+  )
+  billingPlan: BillingPlanRepositoryEntity;
+
+  @ManyToOne(
+    () => RoleRepositoryEntity,
+    (role: RoleRepositoryEntity) => role.id,
+  )
+  role: RoleRepositoryEntity;
 }

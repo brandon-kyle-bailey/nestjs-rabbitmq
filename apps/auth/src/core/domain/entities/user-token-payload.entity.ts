@@ -7,11 +7,13 @@ export class UserTokenPayloadCreatedDomainEvent extends DomainEvent {
   readonly sub: string;
   readonly username: string;
   readonly email: string;
+  readonly role: string;
   constructor(props: DomainEventProps<UserTokenPayloadCreatedDomainEvent>) {
     super(props);
     this.sub = props.sub;
+    this.username = props.username;
     this.email = props.email;
-    this.email = props.email;
+    this.role = props.role;
   }
 }
 
@@ -20,6 +22,7 @@ export interface UserTokenPayloadProps {
   sub: string;
   username: string;
   email: string;
+  role: string;
 }
 
 // Properties that are needed for a User creation
@@ -27,6 +30,7 @@ export interface CreateUserTokenPayloadProps {
   sub: string;
   username: string;
   email: string;
+  role: string;
 }
 
 export class UserTokenPayloadEntity extends AggregateRoot<UserTokenPayloadProps> {

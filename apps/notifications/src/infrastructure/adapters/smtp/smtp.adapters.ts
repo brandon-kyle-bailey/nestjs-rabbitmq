@@ -5,13 +5,19 @@ import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import { MailerOptions, MailerService } from '@nestjs-modules/mailer';
 
 const {
-  services: { notifications },
+  services: {
+    notifications: {
+      transport: {
+        smtp: { host, port },
+      },
+    },
+  },
 } = configuration();
 
 export const config: MailerOptions = {
   transport: {
-    host: 'localhost',
-    port: 1025,
+    host,
+    port,
     secure: false,
     auth: {
       user: 'user@example.com',

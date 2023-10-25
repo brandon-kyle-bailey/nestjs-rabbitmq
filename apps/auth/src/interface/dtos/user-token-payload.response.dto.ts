@@ -4,4 +4,5 @@ export class UserTokenPayloadResponseDto extends ResponseBase {
   sub: string;
   username: string;
   email: string;
+  role: string;
 }

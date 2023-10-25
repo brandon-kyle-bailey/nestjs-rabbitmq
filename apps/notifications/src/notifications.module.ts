@@ -4,19 +4,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from 'libs/config/configuration';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { SendEmailController } from './interface/controllers/send-email.http.controller';
+import { SendEmailEventController } from './interface/controllers/send-email.event.controller';
+import { SendEmailService } from './core/application/services/send-email.service';
 
 @Module({
   imports: [
-    SmtpModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
     }),
     CqrsModule,
     EventEmitterModule.forRoot({ global: true }),
+    SmtpModule,
   ],
-  controllers: [SendEmailController],
-  providers: [Logger, ConfigService],
+  controllers: [SendEmailEventController],
+  providers: [Logger, ConfigService, SendEmailService],
 })
 export class NotificationsModule {}

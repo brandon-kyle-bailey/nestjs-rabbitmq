@@ -14,24 +14,6 @@
   "monorepo": true,
   "root": "apps/gateway",
   "projects": {
-    "gateway": {
-      "type": "application",
-      "root": "apps/gateway",
-      "entryFile": "main",
-      "sourceRoot": "apps/gateway/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/gateway/tsconfig.app.json"
-      }
-    },
-    "scheduler": {
-      "type": "application",
-      "root": "apps/scheduler",
-      "entryFile": "main",
-      "sourceRoot": "apps/scheduler/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/scheduler/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -113,13 +95,13 @@
         "tsConfigPath": "libs/events/tsconfig.lib.json"
       }
     },
-    "processor": {
+    "gateway": {
       "type": "application",
-      "root": "apps/processor",
+      "root": "apps/gateway",
       "entryFile": "main",
-      "sourceRoot": "apps/processor/src",
+      "sourceRoot": "apps/gateway/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/processor/tsconfig.app.json"
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
       }
     },
     "auth": {
@@ -129,15 +111,6 @@
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json"
-      }
-    },
-    "billing": {
-      "type": "application",
-      "root": "apps/billing",
-      "entryFile": "main",
-      "sourceRoot": "apps/billing/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/billing/tsconfig.app.json"
       }
     },
     "notifications": {

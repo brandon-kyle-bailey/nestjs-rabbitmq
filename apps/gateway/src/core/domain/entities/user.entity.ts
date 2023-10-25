@@ -1,20 +1,24 @@
 import { v4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { AggregateRoot } from 'libs/ddd/aggregate-root.base';
-import { AggregateID } from 'libs/ddd/entity.base';
+import { AggregateID, BaseEntityProps } from 'libs/ddd/entity.base';
 import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
+import { BillingPlanEntity } from './billing-plan.entity';
+import { RoleEntity } from './role.entity';
 
 export class UserCreatedDomainEvent extends DomainEvent {
   readonly name: string;
   readonly email: string;
   readonly password: string;
   readonly access_token?: string;
+  readonly refresh_token?: string;
   constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
     super(props);
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
     this.access_token = props.access_token;
+    this.refresh_token = props.refresh_token;
   }
 }
 
@@ -32,10 +36,17 @@ export class UserUpdatedDomainEvent extends DomainEvent {
 
 // All properties that an User has
 export interface UserProps {
+  billingCustomerId: string;
+  role: RoleEntity;
+  roleId: AggregateID;
+  billingPlan: BillingPlanEntity;
+  billingPlanId: AggregateID;
   name: string;
   email: string;
+  verified: boolean;
   password: string;
   access_token?: string;
+  refresh_token?: string;
 }
 
 // Properties that are needed for a User creation
@@ -60,6 +71,22 @@ export class UserEntity extends AggregateRoot<UserProps> {
       }),
     );
     return user;
+  }
+
+  update(props: UpdateUserProps): void {
+    if (props.verified) {
+      this.setIsVerified(props.verified);
+    }
+
+    this.addEvent(
+      new UserUpdatedDomainEvent({
+        aggregateId: this.id,
+      }),
+    );
+  }
+
+  setIsVerified(value: boolean): void {
+    this.props.verified = value;
   }
 
   /* You can create getters only for the properties that you need to

@@ -5,20 +5,24 @@ import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
 
 export class UserTokenCreatedDomainEvent extends DomainEvent {
   readonly access_token: string;
+  readonly refresh_token: string;
   constructor(props: DomainEventProps<UserTokenCreatedDomainEvent>) {
     super(props);
     this.access_token = props.access_token;
+    this.refresh_token = props.refresh_token;
   }
 }
 
 // All properties that an User has
 export interface UserTokenProps {
   access_token: string;
+  refresh_token: string;
 }
 
 // Properties that are needed for a User creation
 export interface CreateUserTokenProps {
   access_token: string;
+  refresh_token: string;
 }
 
 export class UserTokenEntity extends AggregateRoot<UserTokenProps> {

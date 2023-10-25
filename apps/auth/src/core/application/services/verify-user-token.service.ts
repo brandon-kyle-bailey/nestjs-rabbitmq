@@ -32,6 +32,7 @@ export class VerifyUserTokenService implements ICommandHandler {
         sub: rawPayload.sub,
         username: rawPayload.username,
         email: rawPayload.email,
+        role: rawPayload.role,
       });
       return payload;
     } catch (error) {

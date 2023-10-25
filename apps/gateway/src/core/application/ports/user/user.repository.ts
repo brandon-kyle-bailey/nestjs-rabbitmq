@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserEntity } from '../../../domain/entities/user.entity';
 import { UserMapper } from 'apps/gateway/src/infrastructure/mappers/user.mapper';
+import { Equals } from 'class-validator';
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -18,7 +19,16 @@ export class UserRepository implements UserRepositoryPort {
     private eventEmitter: EventEmitter2,
   ) {}
   async findOneByEmail(email: string): Promise<UserEntity> {
-    const result = await this.repo.findOneBy({ email });
+    const result = await this.repo.findOne({
+      where: { email },
+      relations: {
+        role: true,
+        billingPlan: true,
+      },
+    });
+    if (!result) {
+      return null;
+    }
     const entity = this.mapper.toDomain(result);
     return entity;
   }
@@ -32,11 +42,17 @@ export class UserRepository implements UserRepositoryPort {
   }
   async findOneById(id: string): Promise<UserEntity> {
     const result = await this.repo.findOneBy({ id });
+    if (!result) {
+      return null;
+    }
     const entity = this.mapper.toDomain(result);
     return entity;
   }
   async findAll(): Promise<UserEntity[]> {
     const result = await this.repo.find();
+    if (!result) {
+      return [];
+    }
     return result.map((record) => this.mapper.toDomain(record));
   }
   async findAllPaginated(
@@ -47,6 +63,9 @@ export class UserRepository implements UserRepositoryPort {
       take: params.limit,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
     });
+    if (!result) {
+      return null;
+    }
     return new Paginated({
       count: result.length,
       limit: Number(params.limit),

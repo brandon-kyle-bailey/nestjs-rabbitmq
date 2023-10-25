@@ -1,4 +1,5 @@
 export enum UserIntegrationEvents {
-  CreatToken = 'user.token.create',
+  CreateToken = 'user.token.create',
+  RefreshToken = 'user.token.refresh',
   VerifyToken = 'user.token.verify',
 }

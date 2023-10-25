@@ -1,35 +1,12 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SchedulerModule } from './infrastructure/adapters/scheduler/scheduler.module';
-import { CreateOperationController } from './interface/controllers/operation/create-operation.http.controller';
-import { CreateOperationService } from './core/application/services/operation/create-operation.service';
 import { RequestContextModule } from 'nestjs-request-context';
 import { DatabaseModule } from './infrastructure/adapters/database/database.module';
 import configuration from 'libs/config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OperationRepositoryEntity } from './core/application/ports/operation/operation.entity';
-import { OperationRepository } from './core/application/ports/operation/operation.repository';
-import { OperationMapper } from './infrastructure/mappers/operation.mapper';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ScheduleOperationService } from './core/application/services/operation/schedule-operation.service';
-import { DeleteOperationController } from './interface/controllers/operation/delete-operation.http.controller';
-import { DeleteOperationService } from './core/application/services/operation/delete-operation.service';
-import { UnscheduleOperationService } from './core/application/services/operation/unschedule-operation.service';
-import { GetOperationEventController } from './interface/controllers/operation/get-operation.event.controller';
-import { GetOperationService } from './core/application/services/operation/get-operation.service';
-import { GetOperationController } from './interface/controllers/operation/get-operation.http.controller';
-import { UpdateOperationController } from './interface/controllers/operation/update-operation.http.controller';
-import { UpdateOperationService } from './core/application/services/operation/update-operation.service';
-import { ListOperationsController } from './interface/controllers/operation/list-operations.http.controller';
-import { ListOperationsService } from './core/application/services/operation/list-operations.service';
 import { AuthModule } from './infrastructure/adapters/auth/auth.module';
-import { PauseOperationController } from './interface/controllers/operation/pause-operation.http.controller';
-import { PauseOperationService } from './core/application/services/operation/pause-operation.service';
-import { ResumeOperationService } from './core/application/services/operation/resume-operation.service';
-import { ResumeOperationController } from './interface/controllers/operation/resume-operation.http.controller';
-import { UpdateOperationIntervalController } from './interface/controllers/operation/update-operation-interval.http.controller';
-import { UpdateOperationIntervalService } from './core/application/services/operation/update-operation-interval.service';
 import { UserRepositoryEntity } from './core/application/ports/user/user.entity';
 import { UserRepository } from './core/application/ports/user/user.repository';
 import { UserMapper } from './infrastructure/mappers/user.mapper';
@@ -49,48 +26,43 @@ import { WorkspaceRepository } from './core/application/ports/workspace/workspac
 import { WorkspaceMapper } from './infrastructure/mappers/workspace.mapper';
 import { CreateWorkspaceService } from './core/application/services/workspace/create-workspace.service';
 import { DeleteWorkspaceService } from './core/application/services/workspace/delete-workspace.service';
-import { ListWorkspacesService } from './core/application/services/workspace/list-workspaces.service';
 import { UpdateWorkspaceService } from './core/application/services/workspace/update-workspace.service';
 import { CreateWorkspaceController } from './interface/controllers/workspace/create-workspace.http.controller';
 import { DeleteWorkspaceController } from './interface/controllers/workspace/delete-workspace.http.controller';
 import { GetWorkspaceController } from './interface/controllers/workspace/get-workspace.http.controller';
 import { ListWorkspacesController } from './interface/controllers/workspace/list-workspaces.http.controller';
-import { BillingModule } from './infrastructure/adapters/billing/billing.module';
-import { PaymentIntentMapper } from './infrastructure/mappers/payment-intent.mapper';
-import { CreatePaymentIntentService } from './core/application/services/billing/create-payment-intent.service';
-import { CreatePaymentIntentController } from './interface/controllers/billing/create-payment-intent.http.controller';
+import { NotificationsModule } from './infrastructure/adapters/notifications/notifications.module';
+import { VerifyEmailEventController } from './interface/controllers/user/verify-email.event.controller';
+import { BillingPlanRepositoryEntity } from './core/application/ports/billing-plan/billing-plan.entity';
+import { RoleRepositoryEntity } from './core/application/ports/role/role.entity';
+import { RoleRepository } from './core/application/ports/role/role.repository';
+import { BillingPlanRepository } from './core/application/ports/billing-plan/billing-plan.repository';
+import { RoleMapper } from './infrastructure/mappers/role.mapper';
+import { BillingPlanMapper } from './infrastructure/mappers/billing-plan.mapper';
+import { SendVerificationEmailService } from './core/application/services/user/send-verification-email.service';
+import { VeriyUserController } from './interface/controllers/user/verify-user.http.controller';
 
 const entities = [
-  OperationRepositoryEntity,
   UserRepositoryEntity,
   WorkspaceRepositoryEntity,
+  BillingPlanRepositoryEntity,
+  RoleRepositoryEntity,
 ];
 
-const repositories = [OperationRepository, UserRepository, WorkspaceRepository];
-
-const mappers = [
-  OperationMapper,
-  UserMapper,
-  WorkspaceMapper,
-  PaymentIntentMapper,
+const repositories = [
+  UserRepository,
+  WorkspaceRepository,
+  RoleRepository,
+  BillingPlanRepository,
 ];
+
+const mappers = [UserMapper, WorkspaceMapper, RoleMapper, BillingPlanMapper];
 
 const services = [
-  CreatePaymentIntentService,
+  SendVerificationEmailService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
-  ListWorkspacesService,
   DeleteWorkspaceService,
-  CreateOperationService,
-  GetOperationService,
-  DeleteOperationService,
-  ScheduleOperationService,
-  UnscheduleOperationService,
-  UpdateOperationService,
-  ListOperationsService,
-  PauseOperationService,
-  ResumeOperationService,
-  UpdateOperationIntervalService,
   CreateUserService,
   UpdateUserService,
   GetUserService,
@@ -99,20 +71,12 @@ const services = [
 ];
 
 const controllers = [
-  CreatePaymentIntentController,
+  VeriyUserController,
+  VerifyEmailEventController,
   CreateWorkspaceController,
   GetWorkspaceController,
   ListWorkspacesController,
   DeleteWorkspaceController,
-  GetOperationController,
-  CreateOperationController,
-  DeleteOperationController,
-  GetOperationEventController,
-  UpdateOperationController,
-  ListOperationsController,
-  PauseOperationController,
-  ResumeOperationController,
-  UpdateOperationIntervalController,
   GetUserController,
   UpdateUserController,
   CreateUserController,
@@ -130,9 +94,8 @@ const guards = [AuthGuard];
     }),
     CqrsModule,
     DatabaseModule,
-    SchedulerModule,
     AuthModule,
-    BillingModule,
+    NotificationsModule,
     RequestContextModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),

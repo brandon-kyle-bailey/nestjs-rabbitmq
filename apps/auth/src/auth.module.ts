@@ -10,11 +10,13 @@ import { UserTokenMapper } from './infrastructure/mappers/user-token.mapper';
 import { VerifyUserTokenEventController } from './interface/controllers/verify-user-token.event.controller';
 import { UserTokenPayloadMapper } from './infrastructure/mappers/user-token-payload.mapper';
 import { VerifyUserTokenService } from './core/application/services/verify-user-token.service';
+import { RefreshUserTokenEventController } from './interface/controllers/refresh-user-token.event.controller';
+import { RefreshUserTokenService } from './core/application/services/refresh-user-token.service';
 
 const {
   services: {
     auth: {
-      web: { secret },
+      web: { secret, access_token_refresh },
     },
   },
 } = configuration();
@@ -22,11 +24,16 @@ const {
 const controllers = [
   CreateUserTokenEventController,
   VerifyUserTokenEventController,
+  RefreshUserTokenEventController,
 ];
 
 const mappers = [UserTokenMapper, UserTokenPayloadMapper];
 
-const services = [CreateUserTokenService, VerifyUserTokenService];
+const services = [
+  CreateUserTokenService,
+  VerifyUserTokenService,
+  RefreshUserTokenService,
+];
 
 @Module({
   imports: [
@@ -37,7 +44,7 @@ const services = [CreateUserTokenService, VerifyUserTokenService];
     JwtModule.register({
       global: true,
       secret: secret,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: access_token_refresh },
     }),
     CqrsModule,
     EventEmitterModule.forRoot({ global: true }),

@@ -8,6 +8,7 @@ export interface UserTokenPayloadEntityProps {
   readonly sub: string;
   readonly username: string;
   readonly email: string;
+  readonly role: string;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
@@ -33,6 +34,7 @@ export class UserTokenPayloadMapper
         sub: record.sub,
         username: record.username,
         email: record.email,
+        role: record.role,
       },
     });
   }
@@ -42,6 +44,7 @@ export class UserTokenPayloadMapper
     response.sub = props.sub;
     response.username = props.username;
     response.email = props.email;
+    response.role = props.role;
     return response;
   }
 }

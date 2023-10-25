@@ -8,6 +8,7 @@ export interface UserTokenEntityProps {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly access_token: string;
+  readonly refresh_token: string;
 }
 
 @Injectable()
@@ -25,6 +26,7 @@ export class UserTokenMapper
       updatedAt: new Date(record.updatedAt),
       props: {
         access_token: record.access_token,
+        refresh_token: record.refresh_token,
       },
     });
   }
@@ -32,6 +34,7 @@ export class UserTokenMapper
     const props = entity.getProps();
     const response = new UserTokenResponseDto(entity);
     response.access_token = props.access_token;
+    response.refresh_token = props.refresh_token;
     return response;
   }
 }

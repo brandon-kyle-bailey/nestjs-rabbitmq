@@ -27,11 +27,17 @@ export class WorkspaceRepository implements WorkspaceRepositoryPort {
   }
   async findOneById(id: string): Promise<WorkspaceEntity> {
     const result = await this.repo.findOneBy({ id });
+    if (!result) {
+      return null;
+    }
     const entity = this.mapper.toDomain(result);
     return entity;
   }
   async findAll(): Promise<WorkspaceEntity[]> {
     const result = await this.repo.find();
+    if (!result) {
+      return null;
+    }
     return result.map((record) => this.mapper.toDomain(record));
   }
   async findAllPaginated(
@@ -42,6 +48,9 @@ export class WorkspaceRepository implements WorkspaceRepositoryPort {
       take: params.limit,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
     });
+    if (!result) {
+      return null;
+    }
     return new Paginated({
       count: result.length,
       limit: Number(params.limit),
