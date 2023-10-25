@@ -22,9 +22,9 @@ const {
 } = configuration();
 
 const controllers = [
+  RefreshUserTokenEventController,
   CreateUserTokenEventController,
   VerifyUserTokenEventController,
-  RefreshUserTokenEventController,
 ];
 
 const mappers = [UserTokenMapper, UserTokenPayloadMapper];

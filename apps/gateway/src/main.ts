@@ -33,7 +33,7 @@ async function bootstrap() {
     },
     { inheritAppConfig: true },
   );
-  app.startAllMicroservices();
+  // app.startAllMicroservices();
   app.enableShutdownHooks();
 
   await app.listen(port);

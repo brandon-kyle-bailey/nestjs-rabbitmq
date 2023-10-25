@@ -6,6 +6,9 @@ import { WorkspaceRepository } from '../../ports/workspace/workspace.repository'
 import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
 import { UserRepository } from '../../ports/user/user.repository';
 import { UserRepositoryPort } from '../../ports/user/user.repository.port';
+import { WorkspaceMembershipRepository } from '../../ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceMembershipRepositoryPort } from '../../ports/workspace-membership/workspace-membership.repository.port';
+import { WorkspaceMembershipEntity } from '../../../domain/entities/workspace-membership.entity';
 
 @CommandHandler(CreateWorkspaceCommand)
 export class CreateWorkspaceService implements ICommandHandler {
@@ -15,6 +18,8 @@ export class CreateWorkspaceService implements ICommandHandler {
     protected readonly repo: WorkspaceRepositoryPort,
     @Inject(UserRepository)
     protected readonly userRepo: UserRepositoryPort,
+    @Inject(WorkspaceMembershipRepository)
+    protected readonly membershipRepo: WorkspaceMembershipRepositoryPort,
   ) {}
   async execute(command: CreateWorkspaceCommand): Promise<WorkspaceEntity> {
     try {
@@ -24,7 +29,16 @@ export class CreateWorkspaceService implements ICommandHandler {
         name: command.name,
         owner,
       });
-      await this.repo.transaction(async () => this.repo.insert(workspace));
+      const membership = WorkspaceMembershipEntity.create({
+        userId: owner.id,
+        user: owner,
+        workspaceId: workspace.id,
+        workspace,
+      });
+      await this.repo.transaction(async () => {
+        this.repo.insert(workspace);
+        this.membershipRepo.insert(membership);
+      });
       return workspace;
     } catch (error) {
       this.logger.error(

@@ -9,15 +9,16 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { UserRepositoryEntity } from '../user/user.entity';
+import { WorkspaceRepositoryEntity } from '../workspace/workspace.entity';
 
-export interface WorkspaceEntityProps {
-  readonly ownerId: AggregateID;
-  readonly name: string;
+export interface WorkspaceMembershipEntityProps {
+  readonly workspaceId: AggregateID;
+  readonly userId: AggregateID;
 }
 
-@Entity('workspace')
-export class WorkspaceRepositoryEntity {
-  constructor(props: WorkspaceEntityProps) {
+@Entity('workspace_membership')
+export class WorkspaceMembershipRepositoryEntity {
+  constructor(props: WorkspaceMembershipEntityProps) {
     Object.assign(this, props);
   }
   @PrimaryGeneratedColumn('uuid')
@@ -32,15 +33,21 @@ export class WorkspaceRepositoryEntity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column({ length: 500 })
-  name!: string;
+  @ManyToOne(
+    () => WorkspaceRepositoryEntity,
+    (workspace: WorkspaceRepositoryEntity) => workspace.id,
+  )
+  workspace: WorkspaceRepositoryEntity;
+
+  @Column('uuid')
+  workspaceId!: string;
 
   @ManyToOne(
     () => UserRepositoryEntity,
     (user: UserRepositoryEntity) => user.id,
   )
-  owner: UserRepositoryEntity;
+  user: UserRepositoryEntity;
 
   @Column('uuid')
-  ownerId!: string;
+  userId!: string;
 }

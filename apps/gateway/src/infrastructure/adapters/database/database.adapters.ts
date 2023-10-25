@@ -5,6 +5,7 @@ import { UserRepositoryEntity } from 'apps/gateway/src/core/application/ports/us
 import { WorkspaceRepositoryEntity } from 'apps/gateway/src/core/application/ports/workspace/workspace.entity';
 import { BillingPlanRepositoryEntity } from 'apps/gateway/src/core/application/ports/billing-plan/billing-plan.entity';
 import { RoleRepositoryEntity } from 'apps/gateway/src/core/application/ports/role/role.entity';
+import { WorkspaceMembershipRepositoryEntity } from 'apps/gateway/src/core/application/ports/workspace-membership/workspace-membership.entity';
 
 const {
   services: {
@@ -16,8 +17,7 @@ const {
   },
 } = configuration();
 
-export const databaseConfiguration = {
-  type: driver,
+export const databaseConfiguration: PostgresConnectionOptions = {
   nativeDriver: 'pg',
   host,
   port,
@@ -29,8 +29,12 @@ export const databaseConfiguration = {
     WorkspaceRepositoryEntity,
     BillingPlanRepositoryEntity,
     RoleRepositoryEntity,
+    WorkspaceMembershipRepositoryEntity,
   ],
+  migrations: [__dirname + '/./migrations/*'],
+  migrationsRun: true,
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
+  type: 'postgres',
 };
 
 export const dataSource = new DataSource(

@@ -41,12 +41,18 @@ import { RoleMapper } from './infrastructure/mappers/role.mapper';
 import { BillingPlanMapper } from './infrastructure/mappers/billing-plan.mapper';
 import { SendVerificationEmailService } from './core/application/services/user/send-verification-email.service';
 import { VeriyUserController } from './interface/controllers/user/verify-user.http.controller';
+import { RefreshUserTokenController } from './interface/controllers/user/refresh-token.http.controller';
+import { RefresUserTokenService } from './core/application/services/user/refresh-user-token.service';
+import { WorkspaceMembershipRepository } from './core/application/ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceMembershipMapper } from './infrastructure/mappers/workspace-membership.mapper';
+import { WorkspaceMembershipRepositoryEntity } from './core/application/ports/workspace-membership/workspace-membership.entity';
 
 const entities = [
   UserRepositoryEntity,
   WorkspaceRepositoryEntity,
   BillingPlanRepositoryEntity,
   RoleRepositoryEntity,
+  WorkspaceMembershipRepositoryEntity,
 ];
 
 const repositories = [
@@ -54,11 +60,19 @@ const repositories = [
   WorkspaceRepository,
   RoleRepository,
   BillingPlanRepository,
+  WorkspaceMembershipRepository,
 ];
 
-const mappers = [UserMapper, WorkspaceMapper, RoleMapper, BillingPlanMapper];
+const mappers = [
+  UserMapper,
+  WorkspaceMapper,
+  RoleMapper,
+  BillingPlanMapper,
+  WorkspaceMembershipMapper,
+];
 
 const services = [
+  RefresUserTokenService,
   SendVerificationEmailService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
@@ -71,6 +85,7 @@ const services = [
 ];
 
 const controllers = [
+  RefreshUserTokenController,
   VeriyUserController,
   VerifyEmailEventController,
   CreateWorkspaceController,
