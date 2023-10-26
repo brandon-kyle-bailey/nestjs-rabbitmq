@@ -26,7 +26,7 @@ services:
       - 15672:15672
   smtp:
     restart: always
-    image: mailhog/mailhog
+    image: jcalonso/mailhog:latest
     logging:
       driver: 'none'
     ports:
