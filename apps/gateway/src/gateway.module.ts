@@ -60,6 +60,7 @@ import { DeleteScheduledTaskController } from './interface/controllers/scheduled
 import { GetScheduledTaskController } from './interface/controllers/scheduled-task/get-scheduled-task.http.controller';
 import { ListScheduledTaskController } from './interface/controllers/scheduled-task/list-scheduled-task.http.controller';
 import { UpdateScheduledTaskController } from './interface/controllers/scheduled-task/update-scheduled-task.http.controller';
+import { ScheduleOrchestratorModule } from './infrastructure/adapters/schedule-orchestrator/schedule-orchestrator.module';
 
 const entities = [
   UserRepositoryEntity,
@@ -139,6 +140,7 @@ const guards = [AuthGuard];
     DatabaseModule,
     AuthModule,
     NotificationsModule,
+    ScheduleOrchestratorModule,
     RequestContextModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),

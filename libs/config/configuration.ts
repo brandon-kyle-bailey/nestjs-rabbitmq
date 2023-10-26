@@ -113,13 +113,13 @@ export default () => ({
         },
       },
     },
-    processor: {
+    task_runner: {
       web: {
         port: parseInt(process.env.PROCESSOR_PORT, 10),
       },
       transport: {
         rabbitmq: {
-          name: TransportAdapterNames.TransportProcessorAdapterService,
+          name: TransportAdapterNames.TransportTaskRunnerAdapterService,
           url: `amqp://${process.env.GATEWAY_RABBITMQ_USERNAME}:${
             process.env.GATEWAY_RABBITMQ_PASSWORD
           }@${process.env.GATEWAY_RABBITMQ_HOST}:${parseInt(
@@ -148,7 +148,7 @@ export default () => ({
         },
       },
     },
-    scheduler: {
+    schedule_orchestrator: {
       web: {
         port: parseInt(process.env.SCHEDULER_PORT, 10),
       },

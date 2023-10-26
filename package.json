@@ -12,6 +12,7 @@
     "start:auth:dev": "export NODE_ENV=development && nest start auth --watch",
     "start:gateway:dev": "export NODE_ENV=development && nest start --watch",
     "start:notifications:dev": "export NODE_ENV=development && nest start notifications --watch",
+    "start:schedule-orchestrator:dev": "export NODE_ENV=development && nest start schedule-orchestrator --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/app/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

@@ -1,31 +1,46 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ScheduledTaskRepositoryPort } from './scheduled-task.repository.port';
+import { ScheduleRepositoryPort } from './schedule.repository.port';
 import { PaginatedQueryParams, Paginated } from 'libs/ports/repository.port';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ScheduledTaskRepositoryEntity } from './scheduled-task.entity';
+import { ScheduleRepositoryEntity } from './schedule.entity';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ScheduledTaskEntity } from '../../../domain/entities/scheduled-task.entity';
-import { ScheduledTaskMapper } from 'apps/gateway/src/infrastructure/mappers/scheduled-task.mapper';
+import { ScheduleEntity } from '../../../domain/entities/schedule.entity';
+import { ScheduleMapper } from 'apps/schedule-orchestrator/src/infrastructure/mappers/schedule.mapper';
 
 @Injectable()
-export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
+export class ScheduleRepository implements ScheduleRepositoryPort {
   constructor(
-    @InjectRepository(ScheduledTaskRepositoryEntity)
-    protected readonly repo: Repository<ScheduledTaskRepositoryEntity>,
-    protected readonly mapper: ScheduledTaskMapper,
+    @InjectRepository(ScheduleRepositoryEntity)
+    protected readonly repo: Repository<ScheduleRepositoryEntity>,
+    protected readonly mapper: ScheduleMapper,
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
-  async save(entity: ScheduledTaskEntity): Promise<void> {
+
+  async findAllActive(): Promise<ScheduleEntity[]> {
+    const result = await this.repo.findBy({ active: true });
+    return result.map((record) => this.mapper.toDomain(record));
+  }
+  async findOneByTaskId(taskId: string): Promise<ScheduleEntity> {
+    const result = await this.repo.findOne({
+      where: { scheduledTaskId: taskId },
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
+  async save(entity: ScheduleEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
-  async insert(entity: ScheduledTaskEntity): Promise<void> {
+  async insert(entity: ScheduleEntity): Promise<void> {
     const result = await this.repo.insert(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
-  async findOneById(id: string): Promise<ScheduledTaskEntity> {
+  async findOneById(id: string): Promise<ScheduleEntity> {
     const result = await this.repo.findOne({ where: { id } });
     if (!result) {
       return null;
@@ -33,7 +48,7 @@ export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
     const entity = this.mapper.toDomain(result);
     return entity;
   }
-  async findAll(): Promise<ScheduledTaskEntity[]> {
+  async findAll(): Promise<ScheduleEntity[]> {
     const result = await this.repo.find();
     if (!result) {
       return null;
@@ -42,7 +57,7 @@ export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
   }
   async findAllPaginated(
     params: PaginatedQueryParams,
-  ): Promise<Paginated<ScheduledTaskEntity>> {
+  ): Promise<Paginated<ScheduleEntity>> {
     const result = await this.repo.find({
       skip: params.offset,
       take: params.limit,
@@ -58,7 +73,7 @@ export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
       data: result.map((record) => this.mapper.toDomain(record)),
     });
   }
-  async delete(entity: ScheduledTaskEntity): Promise<boolean> {
+  async delete(entity: ScheduleEntity): Promise<boolean> {
     const result = await this.repo.softDelete(entity.id);
     if (result) {
       await entity.publishEvents(this.logger, this.eventEmitter);
