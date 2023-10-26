@@ -38,4 +38,4 @@ lerna-debug.log*
 postgres-password.txt
 
 # env files
-.env*
+.env
