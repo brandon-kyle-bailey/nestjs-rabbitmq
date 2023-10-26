@@ -5,16 +5,22 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'libs/config/configuration';
 import { DatabaseModule } from './infrastructure/adapters/database/database.module';
+import { TaskRepositoryEntity } from './core/application/ports/task/task.entity';
+import { RunTaskEventController } from './interface/controllers/run-task.event.controller';
+import { TaskRepository } from './core/application/ports/task/task.repository';
+import { TaskMapper } from './infrastructure/mappers/task.mapper';
+import { HttpModule } from '@nestjs/axios';
+import { RunTaskService } from './core/application/services/run-task.service';
 
-const entities = [];
+const entities = [TaskRepositoryEntity];
 
-const controllers = [];
+const controllers = [RunTaskEventController];
 
-const repositories = [];
+const repositories = [TaskRepository];
 
-const mappers = [];
+const mappers = [TaskMapper];
 
-const services = [];
+const services = [RunTaskService];
 
 @Module({
   imports: [
@@ -23,6 +29,7 @@ const services = [];
       load: [configuration],
     }),
     CqrsModule,
+    HttpModule,
     DatabaseModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),

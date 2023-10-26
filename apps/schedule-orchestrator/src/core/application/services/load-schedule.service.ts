@@ -8,12 +8,12 @@ import {
 import { OnEvent } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { ScheduleIntegrationEvents } from 'libs/events/schedule.events';
 import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import {
   ScheduleLoadDomainEvent,
   ScheduleType,
 } from '../../domain/entities/schedule.entity';
+import { ScheduledTaskIntegrationEvents } from 'libs/events/scheduled-task.events';
 
 @Injectable()
 export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
@@ -47,6 +47,13 @@ export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
       );
       return;
     }
+    const payload = {
+      scheduledTaskId: event.scheduledTaskId,
+      protocol: event.protocol,
+      host: event.host,
+      port: event.port,
+      payload: event.payload,
+    };
     switch (event.type as ScheduleType) {
       case ScheduleType.Cron:
         this.logger.debug('Cron type not supported yet');
@@ -55,12 +62,7 @@ export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
         this.schedulerRegistry.addInterval(
           event.scheduledTaskId,
           setInterval(() => {
-            this.logger.debug(
-              `Hello world from schedule ${event.scheduledTaskId}`,
-            );
-            this.service.emit(ScheduleIntegrationEvents.Load, {
-              scheduledTaskId: event.scheduledTaskId,
-            });
+            this.service.emit(ScheduledTaskIntegrationEvents.RunTask, payload);
           }, event.interval),
         );
         return;
@@ -68,9 +70,7 @@ export class LoadScheduleService implements OnModuleInit, OnModuleDestroy {
         this.schedulerRegistry.addTimeout(
           event.scheduledTaskId,
           setTimeout(() => {
-            this.service.emit(ScheduleIntegrationEvents.Load, {
-              scheduledTaskId: event.scheduledTaskId,
-            });
+            this.service.emit(ScheduledTaskIntegrationEvents.RunTask, payload);
           }, event.interval),
         );
         return;

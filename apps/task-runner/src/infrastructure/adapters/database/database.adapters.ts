@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import configuration from 'libs/config/configuration';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { TaskRepositoryEntity } from 'apps/task-runner/src/core/application/ports/task/task.entity';
 
 const {
   services: {
@@ -19,7 +20,7 @@ export const databaseConfiguration: PostgresConnectionOptions = {
   username,
   password,
   database,
-  entities: [],
+  entities: [TaskRepositoryEntity],
   migrations: [__dirname + '/./migrations/*'],
   migrationsRun: true,
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
