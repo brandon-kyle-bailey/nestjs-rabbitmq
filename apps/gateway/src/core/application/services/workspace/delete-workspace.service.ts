@@ -5,6 +5,8 @@ import { AggregateID } from 'libs/ddd/entity.base';
 import { WorkspaceRepository } from '../../ports/workspace/workspace.repository';
 import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
 
+// TODO... only delete workspace the user is an owner of
+
 @CommandHandler(DeleteWorkspaceCommand)
 export class DeleteWorkspaceService implements ICommandHandler {
   constructor(

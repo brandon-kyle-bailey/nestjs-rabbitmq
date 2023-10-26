@@ -5,6 +5,8 @@ import { ScheduledTaskEntity } from '../../../domain/entities/scheduled-task.ent
 import { ScheduledTaskRepository } from '../../ports/scheduled-task/scheduled-task.repository';
 import { ScheduledTaskRepositoryPort } from '../../ports/scheduled-task/scheduled-task.repository.port';
 
+// TODO... only update scheduled task the user is an owner of
+
 @CommandHandler(UpdateScheduledTaskCommand)
 export class UpdateScheduledTaskService implements ICommandHandler {
   constructor(

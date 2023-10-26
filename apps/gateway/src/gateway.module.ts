@@ -61,6 +61,8 @@ import { GetScheduledTaskController } from './interface/controllers/scheduled-ta
 import { ListScheduledTaskController } from './interface/controllers/scheduled-task/list-scheduled-task.http.controller';
 import { UpdateScheduledTaskController } from './interface/controllers/scheduled-task/update-scheduled-task.http.controller';
 import { ScheduleOrchestratorModule } from './infrastructure/adapters/schedule-orchestrator/schedule-orchestrator.module';
+import { ListWorkspacesService } from './core/application/services/workspace/list-workspace.service';
+import { ListScheduledTaskService } from './core/application/services/scheduled-task/list-scheduled-task.service';
 
 const entities = [
   UserRepositoryEntity,
@@ -90,6 +92,7 @@ const mappers = [
 ];
 
 const services = [
+  ListScheduledTaskService,
   GetWorkspaceService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
@@ -105,6 +108,7 @@ const services = [
   GetUserService,
   DeleteUserService,
   SigninUserService,
+  ListWorkspacesService,
 ];
 
 const controllers = [

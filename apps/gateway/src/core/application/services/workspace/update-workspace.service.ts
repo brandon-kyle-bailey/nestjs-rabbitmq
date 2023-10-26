@@ -5,6 +5,8 @@ import { WorkspaceEntity } from '../../../domain/entities/workspace.entity';
 import { WorkspaceRepository } from '../../ports/workspace/workspace.repository';
 import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
 
+// TODO... only update workspace the user is an owner of
+
 @CommandHandler(UpdateWorkspaceCommand)
 export class UpdateWorkspaceService implements ICommandHandler {
   constructor(
@@ -17,7 +19,7 @@ export class UpdateWorkspaceService implements ICommandHandler {
       let workspace: WorkspaceEntity;
       await this.repo.transaction(async () => {
         workspace = await this.repo.findOneById(command.id);
-        // Workspace.update(command);
+        workspace.update({ name: command.name });
         this.repo.save(workspace);
       });
       return workspace;

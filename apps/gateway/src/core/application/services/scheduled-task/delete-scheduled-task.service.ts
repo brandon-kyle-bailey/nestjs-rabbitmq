@@ -9,6 +9,8 @@ import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
 import { firstValueFrom } from 'rxjs';
 import { ScheduledTaskIntegrationEvents } from 'libs/events/scheduled-task.events';
 
+// TODO... only delete scheduled task the user is an owner of
+
 @CommandHandler(DeleteScheduledTaskCommand)
 export class DeleteScheduledTaskService
   implements ICommandHandler, OnModuleInit, OnModuleDestroy
