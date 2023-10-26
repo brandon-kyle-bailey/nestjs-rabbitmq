@@ -21,7 +21,6 @@ export class CreateUserTokenService implements ICommandHandler {
   ) {}
   async execute(command: CreateUserTokenCommand): Promise<UserTokenEntity> {
     try {
-      // TODO... reach out to gateway service to verify user passwords match before creating token
       const access_token = await this.service.signAsync({
         sub: command.id,
         username: command.name,

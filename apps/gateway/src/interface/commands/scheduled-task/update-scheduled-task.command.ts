@@ -3,6 +3,7 @@ import { AggregateID } from 'libs/ddd/entity.base';
 
 export class UpdateScheduledTaskCommand extends Command {
   readonly id: AggregateID;
+  readonly userId: AggregateID;
   readonly name?: string;
   readonly protocol?: string;
   readonly host?: string;
@@ -14,6 +15,7 @@ export class UpdateScheduledTaskCommand extends Command {
 
   private constructor(props: CommandProps<UpdateScheduledTaskCommand>) {
     super(props);
+    this.userId = props.userId;
     this.id = props.id;
     this.name = props.name;
     this.protocol = props.protocol;

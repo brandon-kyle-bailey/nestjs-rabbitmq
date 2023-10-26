@@ -26,7 +26,10 @@ export class DeleteScheduledTaskController {
     @Req() request: any,
   ): Promise<AggregateID> {
     try {
-      const command = DeleteScheduledTaskCommand.create(body);
+      const command = DeleteScheduledTaskCommand.create({
+        id: body.id,
+        userId: request.user.sub,
+      });
       const result = await this.commandBus.execute(command);
       return result;
     } catch (error) {

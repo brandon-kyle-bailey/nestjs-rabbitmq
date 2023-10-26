@@ -25,6 +25,7 @@ export class ListWorkspacesController {
       const query = ListWorkspacesQuery.create({
         limit: queryParams?.limit,
         page: queryParams?.page,
+        userId: request.user.sub,
       });
       const result = await this.queryBus.execute(query);
       return new WorkspacePaginatedResponseDto({

@@ -19,6 +19,13 @@ export class WorkspaceMembershipRepository
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+  async findAllByUserId(userId: string): Promise<WorkspaceMembershipEntity[]> {
+    const result = await this.repo.find({ where: { userId } });
+    if (!result) {
+      return null;
+    }
+    return result.map((record) => this.mapper.toDomain(record));
+  }
   async save(entity: WorkspaceMembershipEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);

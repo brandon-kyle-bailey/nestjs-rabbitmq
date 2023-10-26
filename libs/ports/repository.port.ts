@@ -19,6 +19,7 @@ export type PaginatedQueryParams = {
   page: number;
   offset: number;
   orderBy: OrderBy;
+  filter?: any;
 };
 
 export interface RepositoryPort<Entity> {

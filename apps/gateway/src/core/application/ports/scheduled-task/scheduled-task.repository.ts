@@ -26,7 +26,12 @@ export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<ScheduledTaskEntity> {
-    const result = await this.repo.findOne({ where: { id } });
+    const result = await this.repo.findOne({
+      where: { id },
+      relations: {
+        owner: true,
+      },
+    });
     if (!result) {
       return null;
     }
@@ -47,6 +52,7 @@ export class ScheduledTaskRepository implements ScheduledTaskRepositoryPort {
       skip: params.offset,
       take: params.limit,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
+      where: params.filter,
     });
     if (!result) {
       return null;

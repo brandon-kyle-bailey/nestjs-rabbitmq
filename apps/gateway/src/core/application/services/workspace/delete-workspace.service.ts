@@ -1,11 +1,9 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteWorkspaceCommand } from 'apps/gateway/src/interface/commands/workspace/delete-workspace.command';
 import { AggregateID } from 'libs/ddd/entity.base';
 import { WorkspaceRepository } from '../../ports/workspace/workspace.repository';
 import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
-
-// TODO... only delete workspace the user is an owner of
 
 @CommandHandler(DeleteWorkspaceCommand)
 export class DeleteWorkspaceService implements ICommandHandler {
@@ -18,6 +16,11 @@ export class DeleteWorkspaceService implements ICommandHandler {
     try {
       await this.repo.transaction(async () => {
         const workspace = await this.repo.findOneById(command.id);
+        if (!workspace.isOwner(command.userId)) {
+          throw new UnauthorizedException(
+            'user does not have permission to delete this resource',
+          );
+        }
         workspace.delete();
         await this.repo.delete(workspace);
       });

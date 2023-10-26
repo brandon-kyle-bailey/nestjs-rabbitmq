@@ -50,6 +50,7 @@ export class WorkspaceRepository implements WorkspaceRepositoryPort {
       skip: params.offset,
       take: params.limit,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
+      where: params.filter,
     });
     if (!result) {
       return null;

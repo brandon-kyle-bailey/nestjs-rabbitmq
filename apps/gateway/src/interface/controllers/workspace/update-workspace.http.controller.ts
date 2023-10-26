@@ -21,7 +21,10 @@ export class UpdateWorkspaceController {
     @Req() request: any,
   ): Promise<WorkspaceResponseDto> {
     try {
-      const command = UpdateWorkspaceCommand.create(body);
+      const command = UpdateWorkspaceCommand.create({
+        ...body,
+        userId: request.user.sub,
+      });
       const result = await this.commandBus.execute(command);
       return this.mapper.toResponse(result);
     } catch (error) {

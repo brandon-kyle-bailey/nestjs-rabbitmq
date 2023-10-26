@@ -25,7 +25,10 @@ export class DeleteWorkspaceController {
     @Req() request: any,
   ): Promise<AggregateID> {
     try {
-      const command = DeleteWorkspaceCommand.create(body);
+      const command = DeleteWorkspaceCommand.create({
+        ...body,
+        userId: request.user.sub,
+      });
       const result = await this.commandBus.execute(command);
       return result;
     } catch (error) {

@@ -21,7 +21,10 @@ export class UpdateScheduledTaskController {
     @Req() request: any,
   ): Promise<ScheduledTaskResponseDto> {
     try {
-      const command = UpdateScheduledTaskCommand.create(body);
+      const command = UpdateScheduledTaskCommand.create({
+        ...body,
+        userId: request.user.sub,
+      });
       const result = await this.commandBus.execute(command);
       return this.mapper.toResponse(result);
     } catch (error) {

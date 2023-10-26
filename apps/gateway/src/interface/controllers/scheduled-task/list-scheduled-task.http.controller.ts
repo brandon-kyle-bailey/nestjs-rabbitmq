@@ -25,6 +25,7 @@ export class ListScheduledTaskController {
       const query = ListScheduledTaskQuery.create({
         limit: queryParams?.limit,
         page: queryParams?.page,
+        userId: request.user.sub,
       });
       const result = await this.queryBus.execute(query);
       return new ScheduledTaskPaginatedResponseDto({

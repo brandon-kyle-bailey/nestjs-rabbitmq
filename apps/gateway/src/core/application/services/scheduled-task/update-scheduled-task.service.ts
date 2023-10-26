@@ -1,11 +1,9 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateScheduledTaskCommand } from 'apps/gateway/src/interface/commands/scheduled-task/update-scheduled-task.command';
 import { ScheduledTaskEntity } from '../../../domain/entities/scheduled-task.entity';
 import { ScheduledTaskRepository } from '../../ports/scheduled-task/scheduled-task.repository';
 import { ScheduledTaskRepositoryPort } from '../../ports/scheduled-task/scheduled-task.repository.port';
-
-// TODO... only update scheduled task the user is an owner of
 
 @CommandHandler(UpdateScheduledTaskCommand)
 export class UpdateScheduledTaskService implements ICommandHandler {
@@ -18,13 +16,18 @@ export class UpdateScheduledTaskService implements ICommandHandler {
     command: UpdateScheduledTaskCommand,
   ): Promise<ScheduledTaskEntity> {
     try {
-      let ScheduledTask: ScheduledTaskEntity;
+      let scheduledTask: ScheduledTaskEntity;
       await this.repo.transaction(async () => {
-        ScheduledTask = await this.repo.findOneById(command.id);
-        // ScheduledTask.update(command);
-        this.repo.save(ScheduledTask);
+        scheduledTask = await this.repo.findOneById(command.id);
+        if (!scheduledTask.isOwner(command.userId)) {
+          throw new UnauthorizedException(
+            'user does not have permission to update this resource',
+          );
+        }
+        scheduledTask.update(command);
+        this.repo.save(scheduledTask);
       });
-      return ScheduledTask;
+      return scheduledTask;
     } catch (error) {
       this.logger.error(
         'UpdateScheduledTaskService.execute encountered an error',
