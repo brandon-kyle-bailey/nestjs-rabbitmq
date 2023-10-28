@@ -95,6 +95,45 @@ export class GenerateTables1698245426958 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE public.scheduled_task ADD CONSTRAINT "FK_85d53a8f1e57e344f68961d8702" FOREIGN KEY ("workspaceId") REFERENCES public.workspace(id)`,
     );
+
+    await queryRunner.query(`CREATE TABLE public.notification_integration (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	"createdAt" timestamp NOT NULL DEFAULT now(),
+	"updatedAt" timestamp NOT NULL DEFAULT now(),
+	"deletedAt" timestamp NULL,
+	"name" varchar(500) NOT NULL,
+	"type" varchar NOT NULL,
+	url varchar NOT NULL,
+	"token" varchar NOT NULL,
+	active bool NOT NULL,
+	"ownerId" uuid NOT NULL,
+	CONSTRAINT "PK_6264263deec91a9a172b4329076" PRIMARY KEY (id))`);
+
+    await queryRunner.query(
+      `ALTER TABLE public.notification_integration ADD CONSTRAINT "FK_fafc6016b9ccb1f2db8414f87d6" FOREIGN KEY ("ownerId") REFERENCES public."user"(id)`,
+    );
+
+    await queryRunner.query(`CREATE TABLE public.scheduled_task_incident_notification (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	"createdAt" timestamp NOT NULL DEFAULT now(),
+	"updatedAt" timestamp NOT NULL DEFAULT now(),
+	"deletedAt" timestamp NULL,
+	"statusPrefix" int4 NOT NULL,
+	"notify" bool NOT NULL,
+	"ownerId" uuid NOT NULL,
+	"scheduledTaskId" uuid NOT NULL,
+	"notificationIntegrationId" uuid NOT NULL,
+	CONSTRAINT "PK_4a8249303b29778de1d5e8bfd32" PRIMARY KEY (id))`);
+
+    await queryRunner.query(
+      `ALTER TABLE public.scheduled_task_incident_notification ADD CONSTRAINT "FK_6e2d2d49b380bb35bb07fe2c8bd" FOREIGN KEY ("scheduledTaskId") REFERENCES public.scheduled_task(id)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE public.scheduled_task_incident_notification ADD CONSTRAINT "FK_81be76d60fdc4705b7695668a6b" FOREIGN KEY ("ownerId") REFERENCES public."user"(id)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE public.scheduled_task_incident_notification ADD CONSTRAINT "FK_f63b59b46884ac918350e79a4b3" FOREIGN KEY ("notificationIntegrationId") REFERENCES public.notification_integration(id)`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
