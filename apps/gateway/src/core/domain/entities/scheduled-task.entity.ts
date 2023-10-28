@@ -101,6 +101,13 @@ export class ScheduledTaskEntity extends AggregateRoot<ScheduledTaskProps> {
     return userID === this.props.owner.id;
   }
 
+  isValidMinimumInterval(): boolean {
+    const { interval } = this.getProps();
+    const { billingPlan } = this.props.owner.getProps();
+    const { minimumInterval } = billingPlan.getProps();
+    return interval >= minimumInterval || minimumInterval === -1;
+  }
+
   update(props: UpdateScheduledTaskProps): void {
     this.addEvent(
       new ScheduledTaskUpdatedDomainEvent({

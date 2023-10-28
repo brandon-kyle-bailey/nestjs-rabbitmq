@@ -5,9 +5,17 @@ import { DomainEvent, DomainEventProps } from 'libs/ddd/domain-event.base';
 
 export class TaskCreatedDomainEvent extends DomainEvent {
   readonly scheduledTaskId: AggregateID;
+  readonly status: number;
+  readonly duration: number;
+  readonly response: string;
+  readonly createdAt: Date;
   constructor(props: DomainEventProps<TaskCreatedDomainEvent>) {
     super(props);
     this.scheduledTaskId = props.scheduledTaskId;
+    this.status = props.status;
+    this.duration = props.duration;
+    this.response = props.response;
+    this.createdAt = props.createdAt;
   }
 }
 

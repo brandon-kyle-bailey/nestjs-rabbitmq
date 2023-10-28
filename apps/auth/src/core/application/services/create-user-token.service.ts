@@ -41,6 +41,7 @@ export class CreateUserTokenService implements ICommandHandler {
         access_token,
         refresh_token,
       });
+      this.logger.debug('returning token');
       return token;
     } catch (error) {
       this.logger.error(

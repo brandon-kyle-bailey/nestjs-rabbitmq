@@ -8,10 +8,12 @@ import { WorkspaceEntity } from './workspace.entity';
 export class WorkspaceMembershipCreatedDomainEvent extends DomainEvent {
   readonly userId: AggregateID;
   readonly workspaceId: AggregateID;
+  readonly receiveDefaultNotifications: boolean;
   constructor(props: DomainEventProps<WorkspaceMembershipCreatedDomainEvent>) {
     super(props);
     this.userId = props.userId;
     this.workspaceId = props.workspaceId;
+    this.receiveDefaultNotifications = props.receiveDefaultNotifications;
   }
 }
 
@@ -33,6 +35,7 @@ export interface WorkspaceMembershipProps {
   user: UserEntity;
   workspaceId: AggregateID;
   workspace: WorkspaceEntity;
+  receiveDefaultNotifications: boolean;
 }
 
 // Properties that are needed for a WorkspaceMembership creation
@@ -41,6 +44,7 @@ export interface CreateWorkspaceMembershipProps {
   user: UserEntity;
   workspaceId: AggregateID;
   workspace: WorkspaceEntity;
+  receiveDefaultNotifications: boolean;
 }
 
 export class WorkspaceMembershipEntity extends AggregateRoot<WorkspaceMembershipProps> {

@@ -7,33 +7,30 @@ const {
   services: {
     gateway: {
       transport: {
-        rabbitmq: { url, queueOptions, noAck },
+        rabbitmq: { url, queueOptions, noAck, queue: gatewayQueue },
       },
       web: { port },
-    },
-    auth: {
-      transport: {
-        rabbitmq: { queue: authQueue },
-      },
     },
   },
 } = configuration();
 
 async function bootstrap() {
   const app = await NestFactory.create(GatewayModule);
+
   app.connectMicroservice<MicroserviceOptions>(
     {
       transport: Transport.RMQ,
       options: {
         urls: [url],
-        queue: authQueue,
+        queue: gatewayQueue,
         queueOptions,
         noAck,
       },
     },
     { inheritAppConfig: true },
   );
-  // app.startAllMicroservices();
+
+  app.startAllMicroservices();
   app.enableShutdownHooks();
 
   await app.listen(port);

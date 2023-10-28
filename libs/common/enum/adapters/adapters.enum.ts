@@ -7,6 +7,7 @@ export enum TransportAdapterNames {
   TransportNotificationsAdapterService = 'TransportNotificationsAdapterService',
   TransportSmtpAdapterService = 'TransportSmtpAdapterService',
   TransportTaskRunnerAdapterService = 'TransportTaskRunnerAdapterService',
+  TransportIncidentWatcherAdapterService = 'TransportIncidentWatcherAdapterService',
 }
 
 export enum AdapterNames {

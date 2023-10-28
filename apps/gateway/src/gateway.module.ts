@@ -63,6 +63,34 @@ import { UpdateScheduledTaskController } from './interface/controllers/scheduled
 import { ScheduleOrchestratorModule } from './infrastructure/adapters/schedule-orchestrator/schedule-orchestrator.module';
 import { ListWorkspacesService } from './core/application/services/workspace/list-workspace.service';
 import { ListScheduledTaskService } from './core/application/services/scheduled-task/list-scheduled-task.service';
+import { NotificationIntegrationRepositoryEntity } from './core/application/ports/notification-integration/notification-integration.entity';
+import { NotificationIntegrationRepository } from './core/application/ports/notification-integration/notification-integration.repository';
+import { NotificationIntegrationMapper } from './infrastructure/mappers/notification-integration.mapper';
+import { CreateNotificationIntegrationService } from './core/application/services/notification-integration/create-notification-integration.service';
+import { DeleteNotificationIntegrationService } from './core/application/services/notification-integration/delete-notification-integration.service';
+import { GetNotificationIntegrationService } from './core/application/services/notification-integration/get-notification-integration.service';
+import { ListNotificationIntegrationService } from './core/application/services/notification-integration/list-notification-integration.service';
+import { UpdateNotificationIntegrationService } from './core/application/services/notification-integration/update-notification-integration.service';
+import { CreateNotificationIntegrationController } from './interface/controllers/notification-integration/create-notification-integration.http.controller';
+import { DeleteNotificationIntegrationController } from './interface/controllers/notification-integration/delete-notification-integration.http.controller';
+import { GetNotificationIntegrationController } from './interface/controllers/notification-integration/get-notification-integration.http.controller';
+import { ListNotificationIntegrationController } from './interface/controllers/notification-integration/list-notification-integration.http.controller';
+import { UpdateNotificationIntegrationController } from './interface/controllers/notification-integration/update-notification-integration.http.controller';
+import { ScheduledTaskIncidentNotificationRepositoryEntity } from './core/application/ports/scheduled-task-incident-notification/scheduled-task-incident-notification.entity';
+import { ScheduledTaskIncidentNotificationRepository } from './core/application/ports/scheduled-task-incident-notification/scheduled-task-incident-notification.repository';
+import { ScheduledTaskIncidentNotificationMapper } from './infrastructure/mappers/scheduled-task-incident-notification.mapper';
+import { CreateScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/create-scheduled-task-incident-notification.http.controller';
+import { DeleteScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/delete-scheduled-task-incident-notification.http.controller';
+import { GetScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/get-scheduled-task-incident-notification.http.controller';
+import { ListScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/list-scheduled-task-incident-notification.http.controller';
+import { UpdateScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/update-scheduled-task-incident-notification.http.controller';
+import { CreateScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/create-scheduled-task-incident-notification.service';
+import { DeleteScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/delete-scheduled-task-incident-notification.service';
+import { GetScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/get-scheduled-task-incident-notification.service';
+import { ListScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/list-scheduled-task-incident-notification.service';
+import { UpdateScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/update-scheduled-task-incident-notification.service';
+import { FindAllByScheduledTaskIdNotifyStatusPrefixEventController } from './interface/controllers/scheduled-task-incident-notification/find-all-by-scheduled-task-id-notify-status-prefix.event.controller';
+import { FindAllByScheduledTaskIdNotifyStatusPrefixService } from './core/application/services/scheduled-task-incident-notification/find-all-by-scheduled-task-id-notify-status-prefix.service';
 
 const entities = [
   UserRepositoryEntity,
@@ -71,6 +99,8 @@ const entities = [
   RoleRepositoryEntity,
   WorkspaceMembershipRepositoryEntity,
   ScheduledTaskRepositoryEntity,
+  NotificationIntegrationRepositoryEntity,
+  ScheduledTaskIncidentNotificationRepositoryEntity,
 ];
 
 const repositories = [
@@ -80,6 +110,8 @@ const repositories = [
   BillingPlanRepository,
   WorkspaceMembershipRepository,
   ScheduledTaskRepository,
+  NotificationIntegrationRepository,
+  ScheduledTaskIncidentNotificationRepository,
 ];
 
 const mappers = [
@@ -89,26 +121,44 @@ const mappers = [
   BillingPlanMapper,
   WorkspaceMembershipMapper,
   ScheduledTaskMapper,
+  NotificationIntegrationMapper,
+  ScheduledTaskIncidentNotificationMapper,
 ];
 
 const services = [
-  ListScheduledTaskService,
   GetWorkspaceService,
   CreateWorkspaceService,
   UpdateWorkspaceService,
   DeleteWorkspaceService,
+  ListWorkspacesService,
+
+  GetNotificationIntegrationService,
+  CreateNotificationIntegrationService,
+  UpdateNotificationIntegrationService,
+  DeleteNotificationIntegrationService,
+  ListNotificationIntegrationService,
+
+  GetScheduledTaskIncidentNotificationService,
+  CreateScheduledTaskIncidentNotificationService,
+  UpdateScheduledTaskIncidentNotificationService,
+  DeleteScheduledTaskIncidentNotificationService,
+  ListScheduledTaskIncidentNotificationService,
+
+  ListScheduledTaskService,
   GetScheduledTaskService,
   CreateScheduledTaskService,
   UpdateScheduledTaskService,
   DeleteScheduledTaskService,
-  RefresUserTokenService,
+
   SendVerificationEmailService,
+  RefresUserTokenService,
   CreateUserService,
   UpdateUserService,
   GetUserService,
   DeleteUserService,
   SigninUserService,
-  ListWorkspacesService,
+
+  FindAllByScheduledTaskIdNotifyStatusPrefixService,
 ];
 
 const controllers = [
@@ -117,19 +167,35 @@ const controllers = [
   ListScheduledTaskController,
   UpdateScheduledTaskController,
   DeleteScheduledTaskController,
+
   RefreshUserTokenController,
   VeriyUserController,
   VerifyEmailEventController,
-  CreateWorkspaceController,
-  GetWorkspaceController,
-  ListWorkspacesController,
-  UpdateWorkspaceController,
-  DeleteWorkspaceController,
   GetUserController,
   UpdateUserController,
   CreateUserController,
   DeleteUserController,
   SigninUserController,
+
+  FindAllByScheduledTaskIdNotifyStatusPrefixEventController,
+
+  CreateWorkspaceController,
+  GetWorkspaceController,
+  ListWorkspacesController,
+  UpdateWorkspaceController,
+  DeleteWorkspaceController,
+
+  CreateScheduledTaskIncidentNotificationController,
+  GetScheduledTaskIncidentNotificationController,
+  ListScheduledTaskIncidentNotificationController,
+  UpdateScheduledTaskIncidentNotificationController,
+  DeleteScheduledTaskIncidentNotificationController,
+
+  CreateNotificationIntegrationController,
+  GetNotificationIntegrationController,
+  ListNotificationIntegrationController,
+  UpdateNotificationIntegrationController,
+  DeleteNotificationIntegrationController,
 ];
 
 const guards = [AuthGuard];

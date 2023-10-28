@@ -18,7 +18,6 @@ export class SendEmailEventController {
     @Ctx() context: RmqContext,
   ): Promise<void> {
     try {
-      this.logger.debug('Hello there', payload);
       const command = SendEmailCommand.create(payload);
       await this.commandBus.execute(command);
     } catch (error) {

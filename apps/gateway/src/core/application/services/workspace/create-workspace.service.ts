@@ -34,6 +34,7 @@ export class CreateWorkspaceService implements ICommandHandler {
         user: owner,
         workspaceId: workspace.id,
         workspace,
+        receiveDefaultNotifications: command.defaultNotifications,
       });
       await this.repo.transaction(async () => {
         this.repo.insert(workspace);

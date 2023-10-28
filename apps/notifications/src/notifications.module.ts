@@ -6,6 +6,9 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SendEmailEventController } from './interface/controllers/send-email.event.controller';
 import { SendEmailService } from './core/application/services/send-email.service';
+import { HttpModule } from '@nestjs/axios';
+import { SendWebhookEventController } from './interface/controllers/send-webhook.event.controller';
+import { SendWebhookService } from './core/application/services/send-webhook.service';
 
 @Module({
   imports: [
@@ -14,10 +17,11 @@ import { SendEmailService } from './core/application/services/send-email.service
       load: [configuration],
     }),
     CqrsModule,
+    HttpModule,
     EventEmitterModule.forRoot({ global: true }),
     SmtpModule,
   ],
-  controllers: [SendEmailEventController],
-  providers: [Logger, ConfigService, SendEmailService],
+  controllers: [SendEmailEventController, SendWebhookEventController],
+  providers: [Logger, ConfigService, SendEmailService, SendWebhookService],
 })
 export class NotificationsModule {}

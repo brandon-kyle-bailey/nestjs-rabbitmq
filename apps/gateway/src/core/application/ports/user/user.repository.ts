@@ -41,7 +41,10 @@ export class UserRepository implements UserRepositoryPort {
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<UserEntity> {
-    const result = await this.repo.findOneBy({ id });
+    const result = await this.repo.findOne({
+      where: { id },
+      relations: { billingPlan: true, role: true },
+    });
     if (!result) {
       return null;
     }

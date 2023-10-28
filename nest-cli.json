@@ -139,6 +139,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/schedule-orchestrator/tsconfig.app.json"
       }
+    },
+    "incident-watcher": {
+      "type": "application",
+      "root": "apps/incident-watcher",
+      "entryFile": "main",
+      "sourceRoot": "apps/incident-watcher/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/incident-watcher/tsconfig.app.json"
+      }
     }
   }
 }

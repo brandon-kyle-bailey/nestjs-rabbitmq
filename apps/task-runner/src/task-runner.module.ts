@@ -11,16 +11,29 @@ import { TaskRepository } from './core/application/ports/task/task.repository';
 import { TaskMapper } from './infrastructure/mappers/task.mapper';
 import { HttpModule } from '@nestjs/axios';
 import { RunTaskService } from './core/application/services/run-task.service';
+import { PublishTaskResultEventController } from './interface/controllers/publish-task-result.event.controller';
+import { PublishTaskResultGateway } from './core/application/services/publish-task-result.gateway';
+import { PromoteTaskResultToIncidentWatcherService } from './core/application/services/promote-task-result-to-incident-watcher.service';
+import { PromoteTaskResultToIncidentWatcherEventController } from './interface/controllers/promote-task-result-to-incident-watcher.event.controller';
+import { IncidentWatcherModule } from './infrastructure/adapters/incident-watcher/incident-watcher.module';
 
 const entities = [TaskRepositoryEntity];
 
-const controllers = [RunTaskEventController];
+const controllers = [
+  RunTaskEventController,
+  PublishTaskResultEventController,
+  PromoteTaskResultToIncidentWatcherEventController,
+];
 
 const repositories = [TaskRepository];
 
 const mappers = [TaskMapper];
 
-const services = [RunTaskService];
+const services = [
+  RunTaskService,
+  PublishTaskResultGateway,
+  PromoteTaskResultToIncidentWatcherService,
+];
 
 @Module({
   imports: [
@@ -31,6 +44,7 @@ const services = [RunTaskService];
     CqrsModule,
     HttpModule,
     DatabaseModule,
+    IncidentWatcherModule,
     TypeOrmModule.forFeature(entities),
     EventEmitterModule.forRoot({ global: true }),
   ],

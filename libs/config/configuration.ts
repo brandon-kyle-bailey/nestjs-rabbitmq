@@ -17,6 +17,7 @@ export default () => ({
             process.env.GATEWAY_RABBITMQ_PORT,
             10,
           )}`,
+          queue: process.env.GATEWAY_RABBITMQ_QUEUE,
           host: process.env.GATEWAY_RABBITMQ_HOST,
           port: parseInt(process.env.GATEWAY_RABBITMQ_PORT, 10),
           username: process.env.GATEWAY_RABBITMQ_USERNAME,
@@ -209,6 +210,41 @@ export default () => ({
         smtp: {
           host: process.env.NOTIFICATIONS_SMTP_HOST,
           port: parseInt(process.env.NOTIFICATIONS_SMTP_PORT, 10),
+        },
+      },
+      database: {
+        postgres: {
+          driver: process.env.GATEWAY_DATABASE_DRIVER,
+          host: process.env.GATEWAY_DATABASE_HOST,
+          port: parseInt(process.env.GATEWAY_DATABASE_PORT, 10),
+          name: process.env.GATEWAY_DATABASE_NAME,
+          username: process.env.GATEWAY_DATABASE_USERNAME,
+          password: process.env.GATEWAY_DATABASE_PASSWORD,
+        },
+      },
+    },
+    incident_watcher: {
+      web: {
+        port: parseInt(process.env.INCIDENT_WATCHER_PORT, 10),
+      },
+      transport: {
+        rabbitmq: {
+          name: TransportAdapterNames.TransportIncidentWatcherAdapterService,
+          url: `amqp://${process.env.GATEWAY_RABBITMQ_USERNAME}:${
+            process.env.GATEWAY_RABBITMQ_PASSWORD
+          }@${process.env.GATEWAY_RABBITMQ_HOST}:${parseInt(
+            process.env.GATEWAY_RABBITMQ_PORT,
+            10,
+          )}`,
+          host: process.env.GATEWAY_RABBITMQ_HOST,
+          port: parseInt(process.env.GATEWAY_RABBITMQ_PORT, 10),
+          queue: process.env.INCIDENT_WATCHER_RABBITMQ_QUEUE,
+          username: process.env.GATEWAY_RABBITMQ_USERNAME,
+          password: process.env.GATEWAY_RABBITMQ_PASSWORD,
+          queueOptions: {
+            durable: true,
+          },
+          noAck: true,
         },
       },
       database: {

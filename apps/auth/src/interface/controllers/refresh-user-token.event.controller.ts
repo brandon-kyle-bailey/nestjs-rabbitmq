@@ -1,12 +1,6 @@
 import { Controller, Logger } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import {
-  Ctx,
-  EventPattern,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { UserIntegrationEvents } from 'libs/events/user.events';
 import { UserTokenResponseDto } from '../dtos/user-token.response.dto';
 import { UserTokenMapper } from '../../infrastructure/mappers/user-token.mapper';

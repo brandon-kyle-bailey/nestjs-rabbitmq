@@ -7,6 +7,8 @@ import { BillingPlanRepositoryEntity } from 'apps/gateway/src/core/application/p
 import { RoleRepositoryEntity } from 'apps/gateway/src/core/application/ports/role/role.entity';
 import { WorkspaceMembershipRepositoryEntity } from 'apps/gateway/src/core/application/ports/workspace-membership/workspace-membership.entity';
 import { ScheduledTaskRepositoryEntity } from 'apps/gateway/src/core/application/ports/scheduled-task/scheduled-task.entity';
+import { NotificationIntegrationRepositoryEntity } from 'apps/gateway/src/core/application/ports/notification-integration/notification-integration.entity';
+import { ScheduledTaskIncidentNotificationRepositoryEntity } from 'apps/gateway/src/core/application/ports/scheduled-task-incident-notification/scheduled-task-incident-notification.entity';
 
 const {
   services: {
@@ -32,6 +34,8 @@ export const databaseConfiguration: PostgresConnectionOptions = {
     RoleRepositoryEntity,
     WorkspaceMembershipRepositoryEntity,
     ScheduledTaskRepositoryEntity,
+    NotificationIntegrationRepositoryEntity,
+    ScheduledTaskIncidentNotificationRepositoryEntity,
   ],
   migrations: [__dirname + '/./migrations/*'],
   migrationsRun: true,

@@ -1,4 +1,10 @@
-import { Inject, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserRepository } from '../../ports/user/user.repository';
 import { UserRepositoryPort } from '../../ports/user/user.repository.port';
@@ -57,6 +63,10 @@ export class CreateScheduledTaskService
         active: command.active,
         payload: command.payload,
       });
+
+      if (!task.isValidMinimumInterval()) {
+        throw new UnauthorizedException('Interval is invalid');
+      }
       await this.repo.transaction(async () => {
         this.repo.insert(task);
         await firstValueFrom(

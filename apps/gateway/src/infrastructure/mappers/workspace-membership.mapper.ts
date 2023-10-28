@@ -34,6 +34,7 @@ export class WorkspaceMembershipMapper
       workspaceId: copy.workspaceId,
       user: UserMapper.toPersistence(copy.user),
       workspace: WorkspaceMapper.toPersistence(copy.workspace),
+      receiveDefaultNotifications: copy.receiveDefaultNotifications,
     };
     return record;
   }
@@ -59,6 +60,7 @@ export class WorkspaceMembershipMapper
         workspace: record.workspace
           ? WorkspaceMapper.toDomain(record.workspace)
           : undefined,
+        receiveDefaultNotifications: record.receiveDefaultNotifications,
       },
     });
     return entity;

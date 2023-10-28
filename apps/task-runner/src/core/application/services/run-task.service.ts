@@ -49,8 +49,6 @@ export class RunTaskService implements ICommandHandler {
           ),
       );
 
-      // this.logger.debug(response.data);
-
       const {
         status,
         headers: { duration },

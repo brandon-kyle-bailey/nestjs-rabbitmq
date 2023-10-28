@@ -14,6 +14,7 @@ import { WorkspaceRepositoryEntity } from '../workspace/workspace.entity';
 export interface WorkspaceMembershipEntityProps {
   readonly workspaceId: AggregateID;
   readonly userId: AggregateID;
+  readonly receiveDefaultNotifications: boolean;
 }
 
 @Entity('workspace_membership')
@@ -50,4 +51,7 @@ export class WorkspaceMembershipRepositoryEntity {
 
   @Column('uuid')
   userId!: string;
+
+  @Column()
+  receiveDefaultNotifications!: boolean;
 }
