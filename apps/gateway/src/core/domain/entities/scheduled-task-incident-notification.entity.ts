@@ -13,8 +13,8 @@ export class ScheduledTaskIncidentNotificationCreatedDomainEvent extends DomainE
   readonly statusPrefix: number;
   readonly scheduledTaskId: AggregateID;
   readonly scheduledTask: ScheduledTaskEntity;
-  readonly notificationIntegrationId?: AggregateID;
-  readonly notificationIntegration?: NotificationIntegrationEntity;
+  readonly notificationIntegrationId: AggregateID;
+  readonly notificationIntegration: NotificationIntegrationEntity;
   constructor(
     props: DomainEventProps<ScheduledTaskIncidentNotificationCreatedDomainEvent>,
   ) {
@@ -54,8 +54,8 @@ export interface ScheduledTaskIncidentNotificationProps {
   statusPrefix: number;
   scheduledTaskId: AggregateID;
   scheduledTask: ScheduledTaskEntity;
-  notificationIntegrationId?: AggregateID;
-  notificationIntegration?: NotificationIntegrationEntity;
+  notificationIntegrationId: AggregateID;
+  notificationIntegration: NotificationIntegrationEntity;
 }
 
 // Properties that are needed for a ScheduledTaskIncidentNotification creation
@@ -67,7 +67,7 @@ export interface CreateScheduledTaskIncidentNotificationProps {
   scheduledTaskId: AggregateID;
   scheduledTask: ScheduledTaskEntity;
   notificationIntegrationId: AggregateID;
-  notificationIntegration?: NotificationIntegrationEntity;
+  notificationIntegration: NotificationIntegrationEntity;
 }
 
 export interface UpdateScheduledTaskIncidentNotificationProps {

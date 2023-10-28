@@ -4,6 +4,7 @@ import { UserMapper } from './user.mapper';
 import { NotificationIntegrationRepositoryEntity } from '../../core/application/ports/notification-integration/notification-integration.entity';
 import { NotificationIntegrationEntity } from '../../core/domain/entities/notification-integration.entity';
 import { NotificationIntegrationResponseDto } from '../../interface/dtos/notification-integration/notification-integration.response.dto';
+import { UserResponseDto } from '../../interface/dtos/user/user.response.dto';
 
 @Injectable()
 export class NotificationIntegrationMapper
@@ -75,12 +76,17 @@ export class NotificationIntegrationMapper
     entity: NotificationIntegrationEntity,
   ): NotificationIntegrationResponseDto {
     const props = entity.getProps();
+    const userProps = props.owner.getProps();
+    const ownerResponse = new UserResponseDto(props.owner);
+    ownerResponse.email = userProps.email;
+    ownerResponse.name = userProps.name;
     const response = new NotificationIntegrationResponseDto(entity);
     response.name = props.name;
     response.type = props.type;
     response.url = props.url;
     response.token = props.token;
     response.active = props.active;
+    response.owner = ownerResponse;
     return response;
   }
 }

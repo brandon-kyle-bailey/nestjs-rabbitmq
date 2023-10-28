@@ -7,6 +7,7 @@ import { NotificationsIntegrationEvents } from 'libs/events/notifications.events
 import { UserRepository } from '../../ports/user/user.repository';
 import { UserRepositoryPort } from '../../ports/user/user.repository.port';
 import { finalize, firstValueFrom } from 'rxjs';
+import { NotificationGenerics } from 'libs/common/enum/notification-generics.enum';
 
 @CommandHandler(SendVerificationEmailCommand)
 export class SendVerificationEmailService
@@ -34,7 +35,10 @@ export class SendVerificationEmailService
         text: `Hey ${command.name}, Please verify your email address by clicking the link below. http://localhost:3000/v1/user/verify?id=${user.id}`,
       };
       this.service
-        .send(NotificationsIntegrationEvents.SendEmail, payload)
+        .send(
+          `${NotificationsIntegrationEvents.SendPrefix}.${NotificationGenerics.Email}`,
+          payload,
+        )
         .subscribe();
     } catch (error) {
       this.logger.error(

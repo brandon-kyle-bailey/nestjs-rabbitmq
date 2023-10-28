@@ -7,6 +7,7 @@ import { ScheduledTaskMapper } from './scheduled-task.mapper';
 import { ScheduledTaskIncidentNotificationResponseDto } from '../../interface/dtos/scheduled-task-incident-notification/scheduled-task-incident-notification.response.dto';
 import { NotificationIntegrationMapper } from './notification-integration.mapper';
 import { NotificationIntegrationResponseDto } from '../../interface/dtos/notification-integration/notification-integration.response.dto';
+import { UserResponseDto } from '../../interface/dtos/user/user.response.dto';
 
 @Injectable()
 export class ScheduledTaskIncidentNotificationMapper
@@ -96,6 +97,12 @@ export class ScheduledTaskIncidentNotificationMapper
     const notificationProps = props.notificationIntegration.getProps();
     const notificationIntegrationResponse =
       new NotificationIntegrationResponseDto(notificationProps);
+
+    const ownerProps = props.owner.getProps();
+    const ownerResponse = new UserResponseDto(ownerProps);
+    ownerResponse.name = ownerProps.name;
+    ownerResponse.email = ownerProps.email;
+
     notificationIntegrationResponse.active = notificationProps.active;
     notificationIntegrationResponse.name = notificationProps.name;
     notificationIntegrationResponse.token = notificationProps.token;
@@ -104,6 +111,7 @@ export class ScheduledTaskIncidentNotificationMapper
     const response = new ScheduledTaskIncidentNotificationResponseDto(entity);
     response.notify = props.notify;
     response.notificationIntegration = notificationIntegrationResponse;
+    response.owner = ownerResponse;
     return response;
   }
 }

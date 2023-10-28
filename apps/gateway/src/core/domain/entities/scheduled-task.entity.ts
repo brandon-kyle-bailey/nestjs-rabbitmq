@@ -6,12 +6,16 @@ import { UserEntity } from './user.entity';
 import { WorkspaceEntity } from './workspace.entity';
 
 export class ScheduledTaskCreatedDomainEvent extends DomainEvent {
+  readonly scheduledTaskId: AggregateID;
+  readonly workspaceId: AggregateID;
   readonly name: string;
-  readonly owner: UserEntity;
+  readonly ownerId: AggregateID;
   constructor(props: DomainEventProps<ScheduledTaskCreatedDomainEvent>) {
     super(props);
+    this.scheduledTaskId = props.scheduledTaskId;
+    this.workspaceId = props.workspaceId;
     this.name = props.name;
-    this.owner = props.owner;
+    this.ownerId = props.ownerId;
   }
 }
 
@@ -78,17 +82,18 @@ export class ScheduledTaskEntity extends AggregateRoot<ScheduledTaskProps> {
     entityId?: string,
   ): ScheduledTaskEntity {
     const id = entityId || v4();
-    const ScheduledTask = new ScheduledTaskEntity({ id, props });
+    const scheduledTask = new ScheduledTaskEntity({ id, props });
     /* adding "UserCreated" Domain Event that will be published
     eventually so an event handler somewhere may receive it and do an
     appropriate action. Multiple events can be added if needed. */
-    ScheduledTask.addEvent(
+    scheduledTask.addEvent(
       new ScheduledTaskCreatedDomainEvent({
         aggregateId: id,
-        ...ScheduledTask.getProps(),
+        ...scheduledTask.getProps(),
+        scheduledTaskId: scheduledTask.id,
       }),
     );
-    return ScheduledTask;
+    return scheduledTask;
   }
 
   /* You can create getters only for the properties that you need to

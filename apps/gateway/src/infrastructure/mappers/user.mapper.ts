@@ -72,6 +72,8 @@ export class UserMapper
   static toResponse(entity: UserEntity): UserResponseDto {
     const props = entity.getProps();
     const response = new UserResponseDto(entity);
+    response.name = props.name;
+    response.email = props.email;
     if (props.access_token) response.access_token = props.access_token;
     if (props.refresh_token) response.refresh_token = props.refresh_token;
     return response;

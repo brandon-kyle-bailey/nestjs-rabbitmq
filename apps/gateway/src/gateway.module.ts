@@ -91,6 +91,9 @@ import { ListScheduledTaskIncidentNotificationService } from './core/application
 import { UpdateScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/update-scheduled-task-incident-notification.service';
 import { FindAllByScheduledTaskIdNotifyStatusPrefixEventController } from './interface/controllers/scheduled-task-incident-notification/find-all-by-scheduled-task-id-notify-status-prefix.event.controller';
 import { FindAllByScheduledTaskIdNotifyStatusPrefixService } from './core/application/services/scheduled-task-incident-notification/find-all-by-scheduled-task-id-notify-status-prefix.service';
+import { CreateDefaultNotificationIntegrationEventController } from './interface/controllers/notification-integration/create-default-notification-integration.event.controller';
+import { CreateDefaultScheduledTaskIncidentNotificationController } from './interface/controllers/scheduled-task-incident-notification/create-default-scheduled-task-incident-notification.event.controller';
+import { CreateDefaultScheduledTaskIncidentNotificationService } from './core/application/services/scheduled-task-incident-notification/create-default-scheduled-task-incident-notification.service';
 
 const entities = [
   UserRepositoryEntity,
@@ -159,6 +162,7 @@ const services = [
   SigninUserService,
 
   FindAllByScheduledTaskIdNotifyStatusPrefixService,
+  CreateDefaultScheduledTaskIncidentNotificationService,
 ];
 
 const controllers = [
@@ -196,6 +200,9 @@ const controllers = [
   ListNotificationIntegrationController,
   UpdateNotificationIntegrationController,
   DeleteNotificationIntegrationController,
+
+  CreateDefaultNotificationIntegrationEventController,
+  CreateDefaultScheduledTaskIncidentNotificationController,
 ];
 
 const guards = [AuthGuard];

@@ -7,6 +7,7 @@ import { NotificationIntegrationRepositoryEntity } from './notification-integrat
 import { NotificationIntegrationRepositoryPort } from './notification-integration.repository.port';
 import { NotificationIntegrationEntity } from '../../../domain/entities/notification-integration.entity';
 import { NotificationIntegrationMapper } from 'apps/gateway/src/infrastructure/mappers/notification-integration.mapper';
+import { AggregateID } from 'libs/ddd/entity.base';
 
 @Injectable()
 export class NotificationIntegrationRepository
@@ -19,6 +20,20 @@ export class NotificationIntegrationRepository
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+  async findOneByName(
+    name: string,
+    ownerId: AggregateID,
+  ): Promise<NotificationIntegrationEntity> {
+    const result = await this.repo.findOne({
+      where: { name, ownerId },
+      relations: { owner: true },
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
   async save(entity: NotificationIntegrationEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);

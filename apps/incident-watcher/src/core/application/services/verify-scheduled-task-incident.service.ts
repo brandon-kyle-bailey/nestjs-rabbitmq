@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ClientProxy } from '@nestjs/microservices';
 import { VerifyScheduledTaskIncidentCommand } from 'apps/incident-watcher/src/interface/commands/verify-scheduled-task-incident.command';
 import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
+import { NotificationGenerics } from 'libs/common/enum/notification-generics.enum';
 import { NotificationsIntegrationEvents } from 'libs/events/notifications.events';
 import { ScheduledTaskIncidentNotificationIntegrationEvents } from 'libs/events/scheduled-task-incident-notification.events';
 import { firstValueFrom } from 'rxjs';
@@ -53,28 +54,43 @@ export class VerifyScheduledTaskIncidentService
             scheduledTaskIncidentNotification.notificationIntegration.active ===
             true,
         )
-        .map(
-          (scheduledTaskIncidentNotification) =>
-            scheduledTaskIncidentNotification.notificationIntegration,
-        );
+        .map((scheduledTaskIncidentNotification) => {
+          scheduledTaskIncidentNotification.notificationIntegration.owner =
+            scheduledTaskIncidentNotification.owner;
+          return scheduledTaskIncidentNotification.notificationIntegration;
+        });
       if (activeIntegrations.length < 1) {
         this.logger.debug(
           'No notification integrations found for scheduled task. exiting',
         );
         return;
       }
+      this.logger.debug(
+        `found ${activeIntegrations.length} active notification integrations`,
+      );
       activeIntegrations.map((integration) => {
         this.logger.debug(integration);
+        let payload = {};
+        if (integration.type.toLowerCase() === NotificationGenerics.Email) {
+          payload = {
+            to: integration.owner.email,
+            subject: `Incident alert from Hawkstatus`,
+            text: `Incident alert for ${integration.name}`,
+          };
+        }
+        if (integration.type.toLowerCase() === NotificationGenerics.Webhook) {
+          payload = {
+            name: integration.name,
+            token: integration.token,
+            url: integration.url,
+          };
+        }
         this.notificationsService
           .emit(
             `${
               NotificationsIntegrationEvents.SendPrefix
             }.${integration.type.toLowerCase()}`,
-            {
-              name: integration.name,
-              token: integration.token,
-              url: integration.url,
-            },
+            payload,
           )
           .subscribe();
       });

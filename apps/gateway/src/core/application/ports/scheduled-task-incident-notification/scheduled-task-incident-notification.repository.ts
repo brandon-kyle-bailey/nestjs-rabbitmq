@@ -27,6 +27,7 @@ export class ScheduledTaskIncidentNotificationRepository
       where: { scheduledTaskId, statusPrefix, notify: true },
       relations: {
         notificationIntegration: true,
+        owner: true,
       },
     });
     if (!result) {
