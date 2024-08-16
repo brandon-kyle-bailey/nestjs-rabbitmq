@@ -59,6 +59,7 @@ import { BillingModule } from './infrastructure/adapters/billing/billing.module'
 import { PaymentIntentMapper } from './infrastructure/mappers/payment-intent.mapper';
 import { CreatePaymentIntentService } from './core/application/services/billing/create-payment-intent.service';
 import { CreatePaymentIntentController } from './interface/controllers/billing/create-payment-intent.http.controller';
+import { NotificationsModule } from './infrastructure/adapters/notifications/notifications.module';
 
 const entities = [
   OperationRepositoryEntity,
@@ -132,6 +133,7 @@ const guards = [AuthGuard];
     DatabaseModule,
     SchedulerModule,
     AuthModule,
+    NotificationsModule,
     BillingModule,
     RequestContextModule,
     TypeOrmModule.forFeature(entities),

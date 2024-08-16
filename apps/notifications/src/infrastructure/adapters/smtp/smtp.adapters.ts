@@ -2,7 +2,7 @@ import configuration from 'libs/config/configuration';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { TransportAdapterNames } from 'libs/common/enum/adapters/adapters.enum';
-import { MailerOptions, MailerService } from '@nestjs-modules/mailer';
+import { MailerOptions } from '@nestjs-modules/mailer';
 
 const {
   services: { notifications },
